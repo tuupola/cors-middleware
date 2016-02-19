@@ -1,5 +1,5 @@
 {
-    "name": "tuupola/slim-jwt-auth",
+    "name": "tuupola/cors-middleware",
     "description": "PSR-7 CORS Middleware for Slim 3 et al.",
     "keywords": [
         "slim",
