@@ -1,4 +1,4 @@
-# PSR-7 CORS Middleware
+# [WIP] PSR-7 CORS Middleware
 
 [![Latest Version](https://img.shields.io/github/release/tuupola/cors-middleware.svg?style=flat-square)](https://github.com/tuupola/cors-middleware/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
@@ -11,9 +11,8 @@
 Install Slim 3 version using [composer](https://getcomposer.org/).
 
 ``` bash
-$ composer require tuupola/cors-middleware
+$ composer require tuupola/cors-middleware:dev-master
 ```
-
 
 ## Usage
 
