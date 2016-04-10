@@ -155,5 +155,4 @@ class Cors
     {
         return $this->logger = $logger;
     }
-
 }
