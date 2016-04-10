@@ -25,9 +25,6 @@ use Psr\Log\LoggerInterface;
 
 class Cors
 {
-
-    use \Psr\Log\LoggerTrait;
-
     private $options = [
         "origin" => ["*"],
         "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -51,23 +48,20 @@ class Cors
 
     public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next)
     {
-        $cors = Analyzer::instance($this->settings)->analyze($request);
+
+        $analyzer = Analyzer::instance($this->settings);
+        if ($this->logger) {
+            $analyzer->setLogger($this->logger);
+        }
+        $cors = $analyzer->analyze($request);
 
         switch ($cors->getRequestType()) {
             case AnalysisResultInterface::ERR_NO_HOST_HEADER:
-                $this->debug("CORS ERR_NO_HOST_HEADER");
-                return $response->withStatus(401);
             case AnalysisResultInterface::ERR_ORIGIN_NOT_ALLOWED:
-                $this->debug("CORS ERR_ORIGIN_NOT_ALLOWED");
-                return $response->withStatus(401);
             case AnalysisResultInterface::ERR_METHOD_NOT_SUPPORTED:
-                $this->debug("CORS ERR_METHOD_NOT_SUPPORTED");
-                return $response->withStatus(401);
             case AnalysisResultInterface::ERR_HEADERS_NOT_SUPPORTED:
-                $this->debug("CORS ERR_HEADERS_NOT_SUPPORTED");
                 return $response->withStatus(401);
             case AnalysisResultInterface::TYPE_PRE_FLIGHT_REQUEST:
-                $this->debug("CORS TYPE_PRE_FLIGHT_REQUEST");
                 $cors_headers = $cors->getResponseHeaders();
                 foreach ($cors_headers as $header => $value) {
                     $response = $response->withHeader($header, $value);
@@ -157,19 +151,9 @@ class Cors
         return $this;
     }
 
-    /**
-    * Logs with an arbitrary level.
-    *
-    * @param mixed  $level
-    * @param string $message
-    * @param array  $context
-    *
-    * @return null
-    */
-    public function log($level, $message, array $context = [])
+    public function getLogger()
     {
-        if ($this->logger) {
-            return $this->logger->log($level, $message, $context);
-        }
+        return $this->logger = $logger;
     }
+
 }
