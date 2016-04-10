@@ -153,6 +153,6 @@ class Cors
 
     public function getLogger()
     {
-        return $this->logger = $logger;
+        return $this->logger;
     }
 }
