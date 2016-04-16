@@ -31,7 +31,8 @@ class Cors
         "headers.allow" => [],
         "headers.expose" => [],
         "credentials" => false,
-        "cache" => 0
+        "cache" => 0,
+        "error" => null
     ];
 
     private $settings;
@@ -57,10 +58,21 @@ class Cors
 
         switch ($cors->getRequestType()) {
             case AnalysisResultInterface::ERR_NO_HOST_HEADER:
+                return $this->error($request, $response, [
+                    "message" => "CORS host header either absent or does not match server origin.",
+                ])->withStatus(401);
             case AnalysisResultInterface::ERR_ORIGIN_NOT_ALLOWED:
+                return $this->error($request, $response, [
+                    "message" => "CORS request origin is not allowed.",
+                ])->withStatus(401);
             case AnalysisResultInterface::ERR_METHOD_NOT_SUPPORTED:
+                return $this->error($request, $response, [
+                    "message" => "CORS requested method is not supported.",
+                ])->withStatus(401);
             case AnalysisResultInterface::ERR_HEADERS_NOT_SUPPORTED:
-                return $response->withStatus(401);
+                return $this->error($request, $response, [
+                    "message" => "CORS requested header is not allowed.",
+                ])->withStatus(401);
             case AnalysisResultInterface::TYPE_PRE_FLIGHT_REQUEST:
                 $cors_headers = $cors->getResponseHeaders();
                 foreach ($cors_headers as $header => $value) {
@@ -154,5 +166,41 @@ class Cors
     public function getLogger()
     {
         return $this->logger;
+    }
+
+    /**
+     * Get the error handler
+     *
+     * @return string
+     */
+    public function getError()
+    {
+        return $this->options["error"];
+    }
+    /**
+     * Set the error handler
+     *
+     * @return self
+     */
+    public function setError($error)
+    {
+        $this->options["error"] = $error;
+        return $this;
+    }
+
+    /**
+     * Call the error handler if it exists
+     *
+     * @return void
+     */
+    public function error(RequestInterface $request, ResponseInterface $response, $arguments)
+    {
+        if (is_callable($this->options["error"])) {
+            $handler_response = $this->options["error"]($request, $response, $arguments);
+            if (is_a($handler_response, "\Psr\Http\Message\ResponseInterface")) {
+                return $handler_response;
+            }
+        }
+        return $response;
     }
 }
