@@ -151,7 +151,7 @@ class Cors
 
     public function setCredentials($credentials)
     {
-        $$credentials = !!$credentials;
+        $credentials = !!$credentials;
         $this->options["credentials"] = $credentials;
         $this->settings->setRequestCredentialsSupported($credentials);
         return $this;
