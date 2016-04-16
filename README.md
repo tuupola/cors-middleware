@@ -32,8 +32,9 @@ $app->add(new \Tuupola\Middleware\Cors([
 ```
 
 ```bash
-$ curl -X "OPTIONS" "https://api.example.com/" \
-    --include \
+$ curl "https://api.example.com/" \
+    --request OPTIONS \
+    --include
     --header "Access-Control-Request-Method: PUT" \
     --header "Origin: http://www.example.com"
 
@@ -60,7 +61,8 @@ $app->add(new \Tuupola\Middleware\Cors([
 ```
 
 ```bash
-$ curl -X "OPTIONS" "https://api.example.com/" \
+$ curl "https://api.example.com/" \
+    --request OPTIONS \
     --include \
     --header "Access-Control-Request-Method: PUT" \
     --header "Origin: http://www.example.com" \
