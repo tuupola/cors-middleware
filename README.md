@@ -8,7 +8,7 @@
 
 ## Install
 
-Install Slim 3 version using [composer](https://getcomposer.org/).
+Install using [composer](https://getcomposer.org/).
 
 ``` bash
 $ composer require tuupola/cors-middleware:dev-master
@@ -16,7 +16,66 @@ $ composer require tuupola/cors-middleware:dev-master
 
 ## Usage
 
-## Optional parameters
+Documentation assumes you have working knowledge of CORS. There are no mandatory parameters. If called without any parameters the following defaults are used.
+
+```php
+$app = new \Slim\App();
+
+$app->add(new \Tuupola\Middleware\Cors([
+    "origin" => ["*"],
+    "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    "headers.allow" => [],
+    "headers.expose" => [],
+    "credentials" => false,
+    "cache" => 0,
+]));
+```
+
+```bash
+$ curl -X "OPTIONS" "https://api.example.com/" \
+    --include \
+    --header "Access-Control-Request-Method: PUT" \
+    --header "Origin: http://www.example.com"
+
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: http://www.example.com
+Vary: Origin
+Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE
+```
+
+However, you most likely want to change some of the defaults. For example if developing a REST API which supports caching and conditional requests you could use the following.
+
+
+```php
+$app = new \Slim\App();
+
+$app->add(new \Tuupola\Middleware\Cors([
+    "origin" => ["*"],
+    "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
+    "headers.expose" => ["Authorization", "Etag"],
+    "credentials" => true,
+    "cache" => 86400
+]));
+```
+
+```bash
+$ curl -X "OPTIONS" "https://api.example.com/" \
+    --include \
+    --header "Access-Control-Request-Method: PUT" \
+    --header "Origin: http://www.example.com" \
+    --header "Access-Control-Request-Headers: Authorization"
+
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: http://www.example.com
+Access-Control-Allow-Credentials: true
+Vary: Origin
+Access-Control-Max-Age: 60
+Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE
+Access-Control-Allow-Headers: authorization, if-match, if-unmodified-since
+```
+
+## Other parameters
 
 ### Logger
 
@@ -36,14 +95,18 @@ $app->add(new \Tuupola\Middleware\Cors([
 
 ### Error
 
-Error is called when authentication fails. It receives last error message in arguments.
+Error is called when CORS request fails. It receives last error message in arguments. This can be used for example to create `application/json` responses when CORS request fails.
 
-```php
+``` php
 $app = new \Slim\App();
 
 $app->add(new \Tuupola\Middleware\Cors([
-    "error" => function ($request, $response, $arguments) use ($app) {
-        return $response->write("Error");
+    "error" => function ($request, $response, $arguments) {
+        $data["status"] = "error";
+        $data["message"] = $arguments["message"];
+        return $response
+            ->withHeader("Content-Type", "application/json")
+            ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
     }
 ]));
 ```
