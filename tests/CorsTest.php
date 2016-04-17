@@ -13,7 +13,7 @@
  *
  */
 
-namespace Tuupola\Cors\Test;
+namespace Tuupola\Middleware\Test;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -216,8 +216,10 @@ class CorsTest extends \PHPUnit_Framework_TestCase
         $server = [];
         $body = new Body(fopen("php://temp", "r+"));
         $request = new Request("OPTIONS", $uri, $headers, $cookies, $server, $body);
-        $response = new Response();
+        $response = new Response;
+        $logger = new NullLogger;
         $cors = new Cors([
+            "logger" => $logger,
             "origin" => ["*"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
@@ -237,5 +239,23 @@ class CorsTest extends \PHPUnit_Framework_TestCase
         $response = $cors($request, $response, $next);
         $this->assertEquals(401, $response->getStatusCode());
         $this->assertEquals("error", $response->getBody());
+    }
+
+    public function testShouldSetAndGetError()
+    {
+        $cors = new Cors([]);
+        $cors->setError(function () {
+            return "error";
+        });
+        $error = $cors->getError();
+        $this->assertEquals("error", $error());
+    }
+
+    public function testShouldSetAndGetLogger()
+    {
+        $logger = new NullLogger;
+        $cors = new Cors([]);
+        $cors->setLogger($logger);
+        $this->assertInstanceOf("Tuupola\Middleware\Test\NullLogger", $cors->getLogger());
     }
 }
