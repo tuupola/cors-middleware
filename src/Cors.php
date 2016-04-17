@@ -58,22 +58,18 @@ class Cors
 
         switch ($cors->getRequestType()) {
             case AnalysisResultInterface::ERR_NO_HOST_HEADER:
-                print "ERR_NO_HOST_HEADER";
                 return $this->error($request, $response, [
                     "message" => "CORS host header either absent or does not match server origin.",
                 ])->withStatus(401);
             case AnalysisResultInterface::ERR_ORIGIN_NOT_ALLOWED:
-                print "ERR_ORIGIN_NOT_ALLOWED";
                 return $this->error($request, $response, [
                     "message" => "CORS request origin is not allowed.",
                 ])->withStatus(401);
             case AnalysisResultInterface::ERR_METHOD_NOT_SUPPORTED:
-                print "ERR_METHOD_NOT_SUPPORTED";
                 return $this->error($request, $response, [
                     "message" => "CORS requested method is not supported.",
                 ])->withStatus(401);
             case AnalysisResultInterface::ERR_HEADERS_NOT_SUPPORTED:
-                print "ERR_HEADERS_NOT_SUPPORTED";
                 return $this->error($request, $response, [
                     "message" => "CORS requested header is not allowed.",
                 ])->withStatus(401);
@@ -84,7 +80,6 @@ class Cors
                 }
                 return $response->withStatus(200);
             case AnalysisResultInterface::TYPE_REQUEST_OUT_OF_CORS_SCOPE:
-                print "TYPE_REQUEST_OUT_OF_CORS_SCOPE";
                 return $next($request, $response);
             default:
                 /* actual CORS request */
