@@ -204,39 +204,6 @@ class CorsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    /* https://github.com/neomerx/cors-psr7/issues/19
-    public function testShouldReturn401WithWrongHost()
-    {
-        $uri = Uri::createFromString("https://example.com/api");
-        $headers = new Headers([
-            "Host" => "www.nosuch.com",
-            "Origin" => "http://www.example.com/",
-            "Access-Control-Request-Headers" => "Authorization",
-            "Access-Control-Request-Method" => "PUT"
-        ]);
-        $cookies = [];
-        $server = [];
-        $body = new Body(fopen("php://temp", "r+"));
-        $request = new Request("OPTIONS", $uri, $headers, $cookies, $server, $body);
-        $response = new Response();
-        $cors = new Cors([
-            "origin" => ["*"],
-            "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
-            "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
-            "headers.expose" => ["Authorization", "Etag"],
-            "credentials" => true,
-            "cache" => 86400
-        ]);
-
-        $next = function (Request $request, Response $response) {
-            return $response->write("Foo");
-        };
-
-        $response = $cors($request, $response, $next);
-        $this->assertEquals(401, $response->getStatusCode());
-    }
-    */
-
     public function testShouldCallError()
     {
         $uri = Uri::createFromString("https://example.com/api");

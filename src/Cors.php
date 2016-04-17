@@ -57,10 +57,6 @@ class Cors
         $cors = $analyzer->analyze($request);
 
         switch ($cors->getRequestType()) {
-            case AnalysisResultInterface::ERR_NO_HOST_HEADER:
-                return $this->error($request, $response, [
-                    "message" => "CORS host header either absent or does not match server origin.",
-                ])->withStatus(401);
             case AnalysisResultInterface::ERR_ORIGIN_NOT_ALLOWED:
                 return $this->error($request, $response, [
                     "message" => "CORS request origin is not allowed.",
