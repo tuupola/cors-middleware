@@ -26,7 +26,7 @@ use Psr\Log\LoggerInterface;
 class Cors
 {
     private $options = [
-        "origin" => ["*"],
+        "origin" => "*",
         "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
         "headers.allow" => [],
         "headers.expose" => [],
@@ -107,10 +107,10 @@ class Cors
         return $this;
     }
 
-    public function setOrigin(array $origin)
+    public function setOrigin($origin)
     {
         $this->options["origin"] = $origin;
-        $origin = array_fill_keys($origin, true);
+        $origin = array_fill_keys((array) $origin, true);
         $this->settings->setRequestAllowedOrigins($origin);
         return $this;
     }

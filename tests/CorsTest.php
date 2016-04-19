@@ -67,7 +67,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
         $request = new Request("GET", $uri, $headers, $cookies, $server, $body);
         $response = new Response();
         $cors = new Cors([
-            "origin" => ["*"],
+            "origin" => "*",
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
@@ -98,7 +98,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
         $request = new Request("GET", $uri, $headers, $cookies, $server, $body);
         $response = new Response();
         $cors = new Cors([
-            "origin" => ["http://www.example.com"],
+            "origin" => "http://www.example.com",
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
@@ -112,6 +112,34 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
         $response = $cors($request, $response, $next);
         $this->assertEquals(401, $response->getStatusCode());
+    }
+
+    public function testShouldReturn200WithCorrectOrigin()
+    {
+        $uri = Uri::createFromString("https://example.com/api");
+        $headers = new Headers([
+            "Origin" => "http://mobile.example.com"
+        ]);
+        $cookies = [];
+        $server = [];
+        $body = new Body(fopen("php://temp", "r+"));
+        $request = new Request("GET", $uri, $headers, $cookies, $server, $body);
+        $response = new Response();
+        $cors = new Cors([
+            "origin" => ["http://www.example.com", "http://mobile.example.com"],
+            "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
+            "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
+            "headers.expose" => ["Authorization", "Etag"],
+            "credentials" => true,
+            "cache" => 86400
+        ]);
+
+        $next = function (Request $request, Response $response) {
+            return $response->write("Foo");
+        };
+
+        $response = $cors($request, $response, $next);
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testShouldReturn401WithWrongMethod()
@@ -163,7 +191,10 @@ class CorsTest extends \PHPUnit_Framework_TestCase
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
-            "cache" => 86400
+            "cache" => 86400,
+            "error" => function ($request, $response, $arguments) {
+                return "ignored";
+            }
         ]);
 
         $next = function (Request $request, Response $response) {
