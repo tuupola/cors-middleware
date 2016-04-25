@@ -28,7 +28,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tuupola\\Middleware\\Test\\": "tests"
+            "Tuupola\\Middleware\\": "tests"
         }
     },
     "require-dev": {

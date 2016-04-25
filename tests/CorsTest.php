@@ -13,7 +13,7 @@
  *
  */
 
-namespace Tuupola\Middleware\Test;
+namespace Tuupola\Middleware;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -22,8 +22,6 @@ use Psr\Log\NullLogger;
 use Zend\Diactoros\Request;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Uri;
-
-use Tuupola\Middleware\Cors;
 
 class CorsTest extends \PHPUnit_Framework_TestCase
 {
