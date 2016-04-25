@@ -1,6 +1,6 @@
 # [WIP] PSR-7 CORS Middleware
 
-[![Latest Version](https://img.shields.io/github/release/tuupola/cors-middleware.svg?style=flat-square)](https://github.com/tuupola/cors-middleware/releases)
+[![Latest Version](https://img.shields.io/packagist/v/tuupola/cors-middleware.svg?style=flat-square)](https://packagist.org/packages/tuupola/cors-middleware)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Build Status](https://img.shields.io/travis/tuupola/cors-middleware/master.svg?style=flat-square)](https://travis-ci.org/tuupola/cors-middleware)
 [![HHVM Status](https://img.shields.io/hhvm/tuupola/cors-middleware.svg?style=flat-square)](http://hhvm.h4cc.de/package/tuupola/cors-middleware)
