@@ -1,6 +1,6 @@
 {
     "name": "tuupola/cors-middleware",
-    "description": "PSR-7 CORS Middleware for Slim 3 et al.",
+    "description": "PSR-7 CORS Middleware",
     "keywords": [
         "slim",
         "middleware",
@@ -17,7 +17,7 @@
         }
     ],
     "require": {
-        "php" : ">=5.4.0",
+        "php" : ">=5.5.0",
         "psr/log": "^1.0",
         "neomerx/cors-psr7": "^1.0"
     },
