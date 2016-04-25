@@ -155,12 +155,22 @@ class Cors
         return $this;
     }
 
+    /**
+     * Set the logger
+     *
+     * @return self
+     */
     public function setLogger(LoggerInterface $logger = null)
     {
         $this->logger = $logger;
         return $this;
     }
 
+    /**
+     * Get the logger
+     *
+     * @return Psr\Log\LoggerInterface
+     */
     public function getLogger()
     {
         return $this->logger;
@@ -175,6 +185,7 @@ class Cors
     {
         return $this->options["error"];
     }
+
     /**
      * Set the error handler
      *
@@ -189,7 +200,7 @@ class Cors
     /**
      * Call the error handler if it exists
      *
-     * @return void
+     * @return Psr\Http\Message\ResponseInterface
      */
     public function error(RequestInterface $request, ResponseInterface $response, $arguments)
     {
