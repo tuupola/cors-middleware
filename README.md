@@ -11,7 +11,7 @@
 Install using [composer](https://getcomposer.org/).
 
 ``` bash
-$ composer require tuupola/cors-middleware:dev-master
+$ composer require tuupola/cors-middleware
 ```
 
 ## Usage
