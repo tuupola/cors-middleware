@@ -72,15 +72,23 @@ class Cors
             case AnalysisResultInterface::TYPE_PRE_FLIGHT_REQUEST:
                 $cors_headers = $cors->getResponseHeaders();
                 foreach ($cors_headers as $header => $value) {
+                    /* Diactoros errors on integer values. */
+                    if (false === is_array($value)) {
+                        $value = (string)$value;
+                    }
                     $response = $response->withHeader($header, $value);
                 }
                 return $response->withStatus(200);
             case AnalysisResultInterface::TYPE_REQUEST_OUT_OF_CORS_SCOPE:
                 return $next($request, $response);
             default:
-                /* actual CORS request */
+                /* Actual CORS request. */
                 $cors_headers = $cors->getResponseHeaders();
                 foreach ($cors_headers as $header => $value) {
+                    /* Diactoros errors on integer values. */
+                    if (false === is_array($value)) {
+                        $value = (string)$value;
+                    }
                     $response = $response->withHeader($header, $value);
                 }
                 return $next($request, $response);
