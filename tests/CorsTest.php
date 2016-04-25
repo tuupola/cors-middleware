@@ -17,6 +17,7 @@ namespace Tuupola\Middleware\Test;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\NullLogger;
 
 use Zend\Diactoros\Request;
 use Zend\Diactoros\Response;
@@ -270,6 +271,6 @@ class CorsTest extends \PHPUnit_Framework_TestCase
         $logger = new NullLogger;
         $cors = new Cors([]);
         $cors->setLogger($logger);
-        $this->assertInstanceOf("Tuupola\Middleware\Test\NullLogger", $cors->getLogger());
+        $this->assertInstanceOf("Psr\Log\NullLogger", $cors->getLogger());
     }
 }
