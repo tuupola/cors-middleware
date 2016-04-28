@@ -118,6 +118,8 @@ Error is called when CORS request fails. It receives last error message in argum
 $app = new \Slim\App();
 
 $app->add(new \Tuupola\Middleware\Cors([
+    "methods" => ["GET", "POST", "PUT"],
+    "cache" => 86400,
     "error" => function ($request, $response, $arguments) {
         $data["status"] = "error";
         $data["message"] = $arguments["message"];
@@ -126,6 +128,23 @@ $app->add(new \Tuupola\Middleware\Cors([
             ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
     }
 ]));
+```
+
+```
+$ curl https://api.example.com/foo \
+    --request OPTIONS \
+     --include \
+     --header "Access-Control-Request-Method: PATCH" \
+     --header "Origin: http://www.example.com"
+
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json
+Content-Length: 83
+
+{
+    "status": "error",
+    "message": "CORS requested method is not supported."
+}
 ```
 
 ## Testing
