@@ -119,7 +119,6 @@ $app = new \Slim\App();
 
 $app->add(new \Tuupola\Middleware\Cors([
     "methods" => ["GET", "POST", "PUT"],
-    "cache" => 86400,
     "error" => function ($request, $response, $arguments) {
         $data["status"] = "error";
         $data["message"] = $arguments["message"];
@@ -133,9 +132,9 @@ $app->add(new \Tuupola\Middleware\Cors([
 ```
 $ curl https://api.example.com/foo \
     --request OPTIONS \
-     --include \
-     --header "Access-Control-Request-Method: PATCH" \
-     --header "Origin: http://www.example.com"
+    --include \
+    --header "Access-Control-Request-Method: PATCH" \
+    --header "Origin: http://www.example.com"
 
 HTTP/1.1 401 Unauthorized
 Content-Type: application/json
