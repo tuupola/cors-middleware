@@ -56,27 +56,40 @@ $app->add(new \Tuupola\Middleware\Cors([
     "origin" => ["*"],
     "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
     "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
-    "headers.expose" => ["Authorization", "Etag"],
+    "headers.expose" => ["Etag"],
     "credentials" => true,
     "cache" => 86400
 ]));
 ```
 
 ```bash
-$ curl "https://api.example.com/" \
+$ curl "https://api.example.com/foo" \
     --request OPTIONS \
     --include \
-    --header "Access-Control-Request-Method: PUT" \
     --header "Origin: http://www.example.com" \
-    --header "Access-Control-Request-Headers: Authorization"
+    --header "Access-Control-Request-Method: PUT" \
+    --header "Access-Control-Request-Headers: Authorization, If-Match"
 
 HTTP/1.1 200 OK
 Access-Control-Allow-Origin: http://www.example.com
 Access-Control-Allow-Credentials: true
 Vary: Origin
-Access-Control-Max-Age: 60
+Access-Control-Max-Age: 86400
 Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE
 Access-Control-Allow-Headers: authorization, if-match, if-unmodified-since
+```
+
+```bash
+$ curl "https://api.example.com/foo" \
+    --request PUT \
+    --include \
+    --header "Origin: http://www.example.com"
+
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: http://www.example.com
+Access-Control-Allow-Credentials: true
+Vary: Origin
+Access-Control-Expose-Headers: Etag
 ```
 
 ## Other parameters
