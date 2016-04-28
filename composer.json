@@ -18,7 +18,6 @@
     ],
     "require": {
         "php" : "^5.5 || ^7.0",
-        "psr/log": "^1.0",
         "neomerx/cors-psr7": "^1.0"
     },
     "autoload": {
