@@ -50,7 +50,7 @@ class Cors
     public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next)
     {
 
-        $analyzer = Analyzer::instance($this->settings);
+        $analyzer = Analyzer::instance($this->buildSettings($request, $response));
         if ($this->logger) {
             $analyzer->setLogger($this->logger);
         }
@@ -115,36 +115,59 @@ class Cors
         return $this;
     }
 
+    private function buildSettings(RequestInterface $request, ResponseInterface $response)
+    {
+        $origin = array_fill_keys((array) $this->options["origin"], true);
+        $this->settings->setRequestAllowedOrigins($origin);
+
+        if (is_callable($this->options["methods"])) {
+            $methods = (array) $this->options["methods"]($request, $response);
+        } else {
+            $methods = $this->options["methods"];
+        }
+        $methods = array_fill_keys($methods, true);
+        $this->settings->setRequestAllowedMethods($methods);
+
+        $headers = array_fill_keys($this->options["headers.allow"], true);
+        $headers = array_change_key_case($headers, CASE_LOWER);
+        $this->settings->setRequestAllowedHeaders($headers);
+
+        $headers = array_fill_keys($this->options["headers.expose"], true);
+        $this->settings->setResponseExposedHeaders($headers);
+
+        $this->settings->setRequestCredentialsSupported($this->options["credentials"]);
+
+        $this->settings->setPreFlightCacheMaxAge($this->options["cache"]);
+
+        return $this->settings;
+    }
+
     public function setOrigin($origin)
     {
         $this->options["origin"] = $origin;
-        $origin = array_fill_keys((array) $origin, true);
-        $this->settings->setRequestAllowedOrigins($origin);
         return $this;
     }
 
-    public function setMethods(array $methods)
+    public function setMethods($methods)
     {
-        $this->options["methods"] = $methods;
-        $methods = array_fill_keys($methods, true);
-        $this->settings->setRequestAllowedMethods($methods);
+        if (is_callable($methods)) {
+            $this->options["methods"] = $methods->bindTo($this);
+        } else {
+            $this->options["methods"] = $methods;
+        }
+
         return $this;
     }
 
     public function setHeadersAllow(array $headers)
     {
         $this->options["headers.allow"] = $headers;
-        $headers = array_fill_keys($headers, true);
-        $headers = array_change_key_case($headers, CASE_LOWER);
-        $this->settings->setRequestAllowedHeaders($headers);
         return $this;
     }
 
     public function setHeadersExpose(array $headers)
     {
         $this->options["headers.expose"] = $headers;
-        $headers = array_fill_keys($headers, true);
-        $this->settings->setResponseExposedHeaders($headers);
         return $this;
     }
 
@@ -152,14 +175,12 @@ class Cors
     {
         $credentials = !!$credentials;
         $this->options["credentials"] = $credentials;
-        $this->settings->setRequestCredentialsSupported($credentials);
         return $this;
     }
 
     public function setCache($cache)
     {
         $this->options["cache"] = $cache;
-        $this->settings->setPreFlightCacheMaxAge($cache);
         return $this;
     }
 

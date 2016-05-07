@@ -160,6 +160,68 @@ class CorsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(401, $response->getStatusCode());
     }
 
+    public function testShouldReturn401WithWrongMethodFromFunction()
+    {
+        $request = (new Request())
+            ->withUri(new Uri("https://example.com/api"))
+            ->withMethod("OPTIONS")
+            ->withHeader("Origin", "http://www.example.com")
+            ->withHeader("Access-Control-Request-Headers", "Authorization")
+            ->withHeader("Access-Control-Request-Method", "PUT");
+
+        $response = new Response;
+        $cors = new Cors([
+            "origin" => ["*"],
+            "methods" => function($request, $response) {
+                return ["GET", "POST", "DELETE"];
+            },
+            "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
+            "headers.expose" => ["Authorization", "Etag"],
+            "credentials" => true,
+            "cache" => 86400
+        ]);
+
+        $next = function (Request $request, Response $response) {
+            $response->getBody()->write("Foo");
+            return $response;
+        };
+
+        $response = $cors($request, $response, $next);
+
+        $this->assertEquals(401, $response->getStatusCode());
+    }
+
+    public function testShouldReturn200WithCorrectMethodFromFunction()
+    {
+        $request = (new Request())
+            ->withUri(new Uri("https://example.com/api"))
+            ->withMethod("OPTIONS")
+            ->withHeader("Origin", "http://www.example.com")
+            ->withHeader("Access-Control-Request-Headers", "Authorization")
+            ->withHeader("Access-Control-Request-Method", "PUT");
+
+        $response = new Response;
+        $cors = new Cors([
+            "origin" => ["*"],
+            "methods" => function($request, $response) {
+                return ["GET", "POST", "DELETE", "PUT"];
+            },
+            "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
+            "headers.expose" => ["Authorization", "Etag"],
+            "credentials" => true,
+            "cache" => 86400
+        ]);
+
+        $next = function (Request $request, Response $response) {
+            $response->getBody()->write("Foo");
+            return $response;
+        };
+
+        $response = $cors($request, $response, $next);
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
     public function testShouldReturn401WithWrongHeader()
     {
         $request = (new Request())
