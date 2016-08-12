@@ -172,7 +172,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
         $response = new Response;
         $cors = new Cors([
             "origin" => ["*"],
-            "methods" => function($request, $response) {
+            "methods" => function ($request, $response) {
                 return ["GET", "POST", "DELETE"];
             },
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
@@ -203,7 +203,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
         $response = new Response;
         $cors = new Cors([
             "origin" => ["*"],
-            "methods" => function($request, $response) {
+            "methods" => function ($request, $response) {
                 return ["GET", "POST", "DELETE", "PUT"];
             },
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
