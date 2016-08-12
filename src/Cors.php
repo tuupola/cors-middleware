@@ -83,6 +83,7 @@ class Cors
                 return $next($request, $response);
             default:
                 /* Actual CORS request. */
+                $response = $next($request, $response);
                 $cors_headers = $cors->getResponseHeaders();
                 foreach ($cors_headers as $header => $value) {
                     /* Diactoros errors on integer values. */
@@ -91,7 +92,7 @@ class Cors
                     }
                     $response = $response->withHeader($header, $value);
                 }
-                return $next($request, $response);
+                return $response;
         }
     }
 
