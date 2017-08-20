@@ -5,7 +5,6 @@ This middleware implements [Cross-origin resource sharing](https://en.wikipedia.
 [![Latest Version](https://img.shields.io/packagist/v/tuupola/cors-middleware.svg?style=flat-square)](https://packagist.org/packages/tuupola/cors-middleware)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Build Status](https://img.shields.io/travis/tuupola/cors-middleware/master.svg?style=flat-square)](https://travis-ci.org/tuupola/cors-middleware)
-[![HHVM Status](https://img.shields.io/hhvm/tuupola/cors-middleware.svg?style=flat-square)](http://hhvm.h4cc.de/package/tuupola/cors-middleware)
 [![Coverage](http://img.shields.io/codecov/c/github/tuupola/cors-middleware.svg?style=flat-square)](https://codecov.io/github/tuupola/cors-middleware)
 
 ## Install
@@ -151,15 +150,14 @@ Content-Length: 83
 You can run tests either manually...
 
 ``` bash
-$ vendor/bin/phpunit
-$ vendor/bin/phpcs --standard=PSR2 src/ -p
+$ make test
 ```
 
 ... or automatically on every code change.
 
 ``` bash
-$ npm install
-$ grunt watch
+$ brew install entr
+$ make watch
 ```
 
 ## Contributing
