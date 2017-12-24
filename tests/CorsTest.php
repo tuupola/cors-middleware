@@ -19,7 +19,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\NullLogger;
 
-use Zend\Diactoros\Request;
+use Zend\Diactoros\ServerRequest;
 use Zend\Diactoros\Response;
 use Zend\Diactoros\Uri;
 
@@ -33,14 +33,14 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldReturn200ByDefault()
     {
-        $request = (new Request())
+        $request = (new ServerRequest())
             ->withUri(new Uri("https://example.com/api"))
             ->withMethod("GET");
 
         $response = new Response;
         $cors = new Cors([]);
 
-        $next = function (Request $request, Response $response) {
+        $next = function (ServerRequest $request, Response $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -52,7 +52,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldHaveCorsHeaders()
     {
-        $request = (new Request())
+        $request = (new ServerRequest())
             ->withUri(new Uri("https://example.com/api"))
             ->withMethod("GET")
             ->withHeader("Origin", "http://www.example.com");
@@ -67,7 +67,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
             "cache" => 86400
         ]);
 
-        $next = function (Request $request, Response $response) {
+        $next = function (ServerRequest $request, Response $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -81,7 +81,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldReturn401WithWrongOrigin()
     {
-        $request = (new Request())
+        $request = (new ServerRequest())
             ->withUri(new Uri("https://example.com/api"))
             ->withMethod("GET")
             ->withHeader("Origin", "http://www.foo.com");
@@ -107,7 +107,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldReturn200WithCorrectOrigin()
     {
-        $request = (new Request())
+        $request = (new ServerRequest())
             ->withUri(new Uri("https://example.com/api"))
             ->withMethod("GET")
             ->withHeader("Origin", "http://mobile.example.com");
@@ -122,7 +122,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
             "cache" => 86400
         ]);
 
-        $next = function (Request $request, Response $response) {
+        $next = function (ServerRequest $request, Response $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -133,7 +133,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldReturn401WithWrongMethod()
     {
-        $request = (new Request())
+        $request = (new ServerRequest())
             ->withUri(new Uri("https://example.com/api"))
             ->withMethod("OPTIONS")
             ->withHeader("Origin", "http://www.example.com")
@@ -162,7 +162,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldReturn401WithWrongMethodFromFunction()
     {
-        $request = (new Request())
+        $request = (new ServerRequest())
             ->withUri(new Uri("https://example.com/api"))
             ->withMethod("OPTIONS")
             ->withHeader("Origin", "http://www.example.com")
@@ -193,7 +193,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldReturn200WithCorrectMethodFromFunction()
     {
-        $request = (new Request())
+        $request = (new ServerRequest())
             ->withUri(new Uri("https://example.com/api"))
             ->withMethod("OPTIONS")
             ->withHeader("Origin", "http://www.example.com")
@@ -224,7 +224,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldReturn401WithWrongHeader()
     {
-        $request = (new Request())
+        $request = (new ServerRequest())
             ->withUri(new Uri("https://example.com/api"))
             ->withMethod("OPTIONS")
             ->withHeader("Origin", "http://www.example.com")
@@ -255,7 +255,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldReturn200WithProperPreflightRequest()
     {
-        $request = (new Request())
+        $request = (new ServerRequest())
             ->withUri(new Uri("https://example.com/api"))
             ->withMethod("OPTIONS")
             ->withHeader("Origin", "http://www.example.com")
@@ -283,7 +283,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldCallError()
     {
-        $request = (new Request())
+        $request = (new ServerRequest())
             ->withUri(new Uri("https://example.com/api"))
             ->withMethod("OPTIONS")
             ->withHeader("Origin", "http://www.example.com")

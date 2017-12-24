@@ -18,7 +18,9 @@
     ],
     "require": {
         "php" : "^5.5 || ^7.0",
-        "neomerx/cors-psr7": "^1.0"
+        "neomerx/cors-psr7": "^1.0",
+        "http-interop/http-server-middleware": "^1.0",
+        "tuupola/http-factory": "^0.3.0"
     },
     "autoload": {
         "psr-4": {
@@ -34,6 +36,7 @@
         "zendframework/zend-diactoros": "^1.3",
         "squizlabs/php_codesniffer": "^2.5",
         "phpunit/phpunit": "^4.8",
-        "overtrue/phplint": "^0.2.4"
+        "overtrue/phplint": "^0.2.4",
+        "equip/dispatch": "^1.0"
     }
 }
