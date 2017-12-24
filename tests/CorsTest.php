@@ -15,6 +15,7 @@
 
 namespace Tuupola\Middleware;
 
+use Equip\Dispatch\MiddlewareCollection;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\NullLogger;
@@ -165,7 +166,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
         $response = (new ResponseFactory)->createResponse();
         $cors = new Cors([
             "origin" => ["*"],
-            "methods" => function ($request, $response) {
+            "methods" => function ($request) {
                 return ["GET", "POST", "DELETE"];
             },
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
@@ -195,7 +196,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
         $response = (new ResponseFactory)->createResponse();
         $cors = new Cors([
             "origin" => ["*"],
-            "methods" => function ($request, $response) {
+            "methods" => function ($request) {
                 return ["GET", "POST", "DELETE", "PUT"];
             },
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
@@ -321,5 +322,37 @@ class CorsTest extends \PHPUnit_Framework_TestCase
         $cors = new Cors([]);
         $cors->setLogger($logger);
         $this->assertInstanceOf("Psr\Log\NullLogger", $cors->getLogger());
+    }
+
+    public function testShouldHandlePsr15()
+    {
+        $request = (new ServerRequestFactory)
+            ->createServerRequest("GET", "https://example.com/api")
+            ->withHeader("Origin", "http://www.example.com");
+
+        $default = function (ServerRequestInterface $request) {
+            $response = (new ResponseFactory)->createResponse();
+            $response->getBody()->write("Success");
+            return $response;
+        };
+
+        $collection = new MiddlewareCollection([
+            new Cors([
+                "origin" => "*",
+                "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
+                "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
+                "headers.expose" => ["Authorization", "Etag"],
+                "credentials" => true,
+                "cache" => 86400
+            ])
+        ]);
+
+        $response = $collection->dispatch($request, $default);
+
+        $this->assertEquals("http://www.example.com", $response->getHeaderLine("Access-Control-Allow-Origin"));
+        $this->assertEquals("true", $response->getHeaderLine("Access-Control-Allow-Credentials"));
+        $this->assertEquals("Origin", $response->getHeaderLine("Vary"));
+        $this->assertEquals("Authorization,Etag", $response->getHeaderLine("Access-Control-Expose-Headers"));
+        $this->assertEquals("Success", $response->getBody());
     }
 }
