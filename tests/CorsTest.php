@@ -15,13 +15,13 @@
 
 namespace Tuupola\Middleware;
 
-use Psr\Http\Message\RequestInterface;
+use Equip\Dispatch\MiddlewareCollection;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\NullLogger;
-
-use Zend\Diactoros\Request;
-use Zend\Diactoros\Response;
-use Zend\Diactoros\Uri;
+use Tuupola\Http\Factory\ResponseFactory;
+use Tuupola\Http\Factory\ServerRequestFactory;
+use Tuupola\Http\Factory\UriFactory;
 
 class CorsTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,14 +33,13 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldReturn200ByDefault()
     {
-        $request = (new Request())
-            ->withUri(new Uri("https://example.com/api"))
-            ->withMethod("GET");
+        $request = (new ServerRequestFactory)
+            ->createServerRequest("GET", "https://example.com/api");
 
-        $response = new Response;
+        $response = (new ResponseFactory)->createResponse();
         $cors = new Cors([]);
 
-        $next = function (Request $request, Response $response) {
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -52,12 +51,11 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldHaveCorsHeaders()
     {
-        $request = (new Request())
-            ->withUri(new Uri("https://example.com/api"))
-            ->withMethod("GET")
+        $request = (new ServerRequestFactory)
+            ->createServerRequest("GET", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com");
 
-        $response = new Response;
+        $response = (new ResponseFactory)->createResponse();
         $cors = new Cors([
             "origin" => "*",
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -67,7 +65,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
             "cache" => 86400
         ]);
 
-        $next = function (Request $request, Response $response) {
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -81,12 +79,11 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldReturn401WithWrongOrigin()
     {
-        $request = (new Request())
-            ->withUri(new Uri("https://example.com/api"))
-            ->withMethod("GET")
+        $request = (new ServerRequestFactory)
+            ->createServerRequest("GET", "https://example.com/api")
             ->withHeader("Origin", "http://www.foo.com");
 
-        $response = new Response;
+        $response = (new ResponseFactory)->createResponse();
         $cors = new Cors([
             "origin" => "http://www.example.com",
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -96,7 +93,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
             "cache" => 86400
         ]);
 
-        $next = function (Request $request, Response $response) {
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -107,12 +104,11 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldReturn200WithCorrectOrigin()
     {
-        $request = (new Request())
-            ->withUri(new Uri("https://example.com/api"))
-            ->withMethod("GET")
+        $request = (new ServerRequestFactory)
+            ->createServerRequest("GET", "https://example.com/api")
             ->withHeader("Origin", "http://mobile.example.com");
 
-        $response = new Response;
+        $response = (new ResponseFactory)->createResponse();
         $cors = new Cors([
             "origin" => ["http://www.example.com", "http://mobile.example.com"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -122,7 +118,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
             "cache" => 86400
         ]);
 
-        $next = function (Request $request, Response $response) {
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -133,14 +129,13 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldReturn401WithWrongMethod()
     {
-        $request = (new Request())
-            ->withUri(new Uri("https://example.com/api"))
-            ->withMethod("OPTIONS")
+        $request = (new ServerRequestFactory)
+            ->createServerRequest("OPTIONS", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com")
             ->withHeader("Access-Control-Request-Headers", "Authorization")
             ->withHeader("Access-Control-Request-Method", "PUT");
 
-        $response = new Response;
+        $response = (new ResponseFactory)->createResponse();
         $cors = new Cors([
             "origin" => ["*"],
             "methods" => ["GET", "POST", "DELETE"],
@@ -162,17 +157,16 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldReturn401WithWrongMethodFromFunction()
     {
-        $request = (new Request())
-            ->withUri(new Uri("https://example.com/api"))
-            ->withMethod("OPTIONS")
+        $request = (new ServerRequestFactory)
+            ->createServerRequest("OPTIONS", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com")
             ->withHeader("Access-Control-Request-Headers", "Authorization")
             ->withHeader("Access-Control-Request-Method", "PUT");
 
-        $response = new Response;
+        $response = (new ResponseFactory)->createResponse();
         $cors = new Cors([
             "origin" => ["*"],
-            "methods" => function ($request, $response) {
+            "methods" => function ($request) {
                 return ["GET", "POST", "DELETE"];
             },
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
@@ -193,17 +187,16 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldReturn200WithCorrectMethodFromFunction()
     {
-        $request = (new Request())
-            ->withUri(new Uri("https://example.com/api"))
-            ->withMethod("OPTIONS")
+        $request = (new ServerRequestFactory)
+            ->createServerRequest("OPTIONS", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com")
             ->withHeader("Access-Control-Request-Headers", "Authorization")
             ->withHeader("Access-Control-Request-Method", "PUT");
 
-        $response = new Response;
+        $response = (new ResponseFactory)->createResponse();
         $cors = new Cors([
             "origin" => ["*"],
-            "methods" => function ($request, $response) {
+            "methods" => function ($request) {
                 return ["GET", "POST", "DELETE", "PUT"];
             },
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
@@ -224,14 +217,13 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldReturn401WithWrongHeader()
     {
-        $request = (new Request())
-            ->withUri(new Uri("https://example.com/api"))
-            ->withMethod("OPTIONS")
+        $request = (new ServerRequestFactory)
+            ->createServerRequest("OPTIONS", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com")
             ->withHeader("Access-Control-Request-Headers", "X-Nosuch")
             ->withHeader("Access-Control-Request-Method", "PUT");
 
-        $response = new Response;
+        $response = (new ResponseFactory)->createResponse();
         $cors = new Cors([
             "origin" => ["*"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -255,14 +247,13 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldReturn200WithProperPreflightRequest()
     {
-        $request = (new Request())
-            ->withUri(new Uri("https://example.com/api"))
-            ->withMethod("OPTIONS")
+        $request = (new ServerRequestFactory)
+            ->createServerRequest("OPTIONS", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com")
             ->withHeader("Access-Control-Request-Headers", "Authorization")
             ->withHeader("Access-Control-Request-Method", "PUT");
 
-        $response = new Response;
+        $response = (new ResponseFactory)->createResponse();
         $cors = new Cors([
             "origin" => ["*"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -283,14 +274,13 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
     public function testShouldCallError()
     {
-        $request = (new Request())
-            ->withUri(new Uri("https://example.com/api"))
-            ->withMethod("OPTIONS")
+        $request = (new ServerRequestFactory)
+            ->createServerRequest("OPTIONS", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com")
             ->withHeader("Access-Control-Request-Headers", "X-Nosuch")
             ->withHeader("Access-Control-Request-Method", "PUT");
 
-        $response = new Response;
+        $response = (new ResponseFactory)->createResponse();
         $logger = new NullLogger;
         $cors = new Cors([
             "logger" => $logger,
@@ -332,5 +322,37 @@ class CorsTest extends \PHPUnit_Framework_TestCase
         $cors = new Cors([]);
         $cors->setLogger($logger);
         $this->assertInstanceOf("Psr\Log\NullLogger", $cors->getLogger());
+    }
+
+    public function testShouldHandlePsr15()
+    {
+        $request = (new ServerRequestFactory)
+            ->createServerRequest("GET", "https://example.com/api")
+            ->withHeader("Origin", "http://www.example.com");
+
+        $default = function (ServerRequestInterface $request) {
+            $response = (new ResponseFactory)->createResponse();
+            $response->getBody()->write("Success");
+            return $response;
+        };
+
+        $collection = new MiddlewareCollection([
+            new Cors([
+                "origin" => "*",
+                "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
+                "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
+                "headers.expose" => ["Authorization", "Etag"],
+                "credentials" => true,
+                "cache" => 86400
+            ])
+        ]);
+
+        $response = $collection->dispatch($request, $default);
+
+        $this->assertEquals("http://www.example.com", $response->getHeaderLine("Access-Control-Allow-Origin"));
+        $this->assertEquals("true", $response->getHeaderLine("Access-Control-Allow-Credentials"));
+        $this->assertEquals("Origin", $response->getHeaderLine("Vary"));
+        $this->assertEquals("Authorization,Etag", $response->getHeaderLine("Access-Control-Expose-Headers"));
+        $this->assertEquals("Success", $response->getBody());
     }
 }
