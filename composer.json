@@ -37,6 +37,7 @@
         "squizlabs/php_codesniffer": "^2.5",
         "overtrue/phplint": "^0.2.4",
         "equip/dispatch": "^1.0",
-        "phpunit/phpunit": "^6.5"
+        "phpunit/phpunit": "^6.5",
+        "codedungeon/phpunit-result-printer": "^0.4.4"
     }
 }
