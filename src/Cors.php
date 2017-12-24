@@ -19,9 +19,9 @@ namespace Tuupola\Middleware;
 
 use Interop\Http\Server\MiddlewareInterface;
 use Interop\Http\Server\RequestHandlerInterface;
-use Neomerx\Cors\Analyzer;
-use Neomerx\Cors\Contracts\AnalysisResultInterface;
-use Neomerx\Cors\Strategies\Settings;
+use Neomerx\Cors\Analyzer as CorsAnalyzer;
+use Neomerx\Cors\Contracts\AnalysisResultInterface as CorsAnalysisResultInterface;
+use Neomerx\Cors\Strategies\Settings as CorsSettings;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -44,7 +44,7 @@ class Cors implements MiddlewareInterface
 
     public function __construct($options)
     {
-        $this->settings = new Settings;
+        $this->settings = new CorsSettings;
 
         /* Store passed in options overwriting any defaults. */
         $this->hydrate($options);
@@ -59,26 +59,26 @@ class Cors implements MiddlewareInterface
     {
         $response = (new ResponseFactory)->createResponse();
 
-        $analyzer = Analyzer::instance($this->buildSettings($request, $response));
+        $analyzer = CorsAnalyzer::instance($this->buildSettings($request, $response));
         if ($this->logger) {
             $analyzer->setLogger($this->logger);
         }
         $cors = $analyzer->analyze($request);
 
         switch ($cors->getRequestType()) {
-            case AnalysisResultInterface::ERR_ORIGIN_NOT_ALLOWED:
+            case CorsAnalysisResultInterface::ERR_ORIGIN_NOT_ALLOWED:
                 return $this->processError($request, $response, [
                     "message" => "CORS request origin is not allowed.",
                 ])->withStatus(401);
-            case AnalysisResultInterface::ERR_METHOD_NOT_SUPPORTED:
+            case CorsAnalysisResultInterface::ERR_METHOD_NOT_SUPPORTED:
                 return $this->processError($request, $response, [
                     "message" => "CORS requested method is not supported.",
                 ])->withStatus(401);
-            case AnalysisResultInterface::ERR_HEADERS_NOT_SUPPORTED:
+            case CorsAnalysisResultInterface::ERR_HEADERS_NOT_SUPPORTED:
                 return $this->processError($request, $response, [
                     "message" => "CORS requested header is not allowed.",
                 ])->withStatus(401);
-            case AnalysisResultInterface::TYPE_PRE_FLIGHT_REQUEST:
+            case CorsAnalysisResultInterface::TYPE_PRE_FLIGHT_REQUEST:
                 $cors_headers = $cors->getResponseHeaders();
                 foreach ($cors_headers as $header => $value) {
                     /* Diactoros errors on integer values. */
@@ -88,7 +88,7 @@ class Cors implements MiddlewareInterface
                     $response = $response->withHeader($header, $value);
                 }
                 return $response->withStatus(200);
-            case AnalysisResultInterface::TYPE_REQUEST_OUT_OF_CORS_SCOPE:
+            case CorsAnalysisResultInterface::TYPE_REQUEST_OUT_OF_CORS_SCOPE:
                 return $handler->handle($request);
             default:
                 /* Actual CORS request. */
