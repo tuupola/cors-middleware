@@ -13,9 +13,14 @@ matrix:
     allow_failures:
         - php: nightly
 
+include:
+    - php: 7.0
+        env: DEPENDENCIES=lowest
+
 before_script:
     - travis_retry composer self-update
     - travis_retry composer install --no-interaction
+    - if [ "$DEPENDENCIES" = "lowest" ]; then travis_retry composer update --prefer-lowest --prefer-stable --no-interaction; fi;
 
 script:
     - make travis
