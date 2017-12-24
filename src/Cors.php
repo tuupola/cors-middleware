@@ -50,11 +50,20 @@ final class Cors implements MiddlewareInterface
         $this->hydrate($options);
     }
 
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
-    {
+    /**
+     * Execute as PSR-7 double pass middleware.
+     */
+    public function __invoke(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        callable $next
+    ): ResponseInterface {
         return $this->process($request, new CallableHandler($next, $response));
     }
 
+    /**
+     * Execute as PSR-15 middleware.
+     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = (new ResponseFactory)->createResponse();
@@ -106,7 +115,7 @@ final class Cors implements MiddlewareInterface
     }
 
     /**
-     * Hydrate all options from the given array
+     * Hydrate all options from the given array.
      */
     private function hydrate(array $data = []): void
     {
@@ -120,16 +129,15 @@ final class Cors implements MiddlewareInterface
                 call_user_func([$this, $method], $value);
             } else {
                 /* Or fallback to setting option directly */
-                print $key;
                 $this->options[$key] = $value;
             }
         }
     }
 
     /**
-     * Builds the neomerc/cors settings object
+     * Build a CORS settings object.
      */
-    private function buildSettings(ServerRequestInterface $request, ResponseInterface $response)
+    private function buildSettings(ServerRequestInterface $request, ResponseInterface $response): CorsSettings
     {
         $origin = array_fill_keys((array) $this->options["origin"], true);
         $this->settings->setRequestAllowedOrigins($origin);
@@ -156,11 +164,17 @@ final class Cors implements MiddlewareInterface
         return $this->settings;
     }
 
+    /**
+     * Set allowed origin.
+     */
     private function origin($origin): void
     {
         $this->options["origin"] = (array) $origin;
     }
 
+    /**
+     * Set request methods to be allowed.
+     */
     private function methods($methods): void
     {
         if (is_callable($methods)) {
@@ -170,38 +184,56 @@ final class Cors implements MiddlewareInterface
         }
     }
 
+    /**
+     * Set headers to be allowed.
+     */
     private function headersAllow(array $headers): void
     {
         $this->options["headers.allow"] = $headers;
     }
 
+    /**
+     * Set headers to be exposed.
+     */
     private function headersExpose(array $headers): void
     {
         $this->options["headers.expose"] = $headers;
     }
 
+    /**
+     * Enable or disable cookies and authentication.
+     */
     private function credentials(bool $credentials): void
     {
         $this->options["credentials"] = $credentials;
     }
 
+    /**
+     * Set the cache time in seconds.
+     */
     private function cache(int $cache): void
     {
         $this->options["cache"] = $cache;
     }
 
+    /**
+     * Set the error handler.
+     */
     private function error(callable $error): void
     {
         $this->options["error"] = $error->bindTo($this);
     }
 
+    /**
+     * Set the PSR-3 logger.
+     */
     private function logger(LoggerInterface $logger = null)
     {
         $this->logger = $logger;
     }
 
     /**
-     * Call the error handler if it exists
+     * Call the error handler if it exists.
      */
     private function processError(ServerRequestInterface $request, ResponseInterface $response, array $arguments = null)
     {
