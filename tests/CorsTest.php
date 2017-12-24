@@ -16,6 +16,7 @@
 namespace Tuupola\Middleware;
 
 use Equip\Dispatch\MiddlewareCollection;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\NullLogger;
@@ -23,7 +24,7 @@ use Tuupola\Http\Factory\ResponseFactory;
 use Tuupola\Http\Factory\ServerRequestFactory;
 use Tuupola\Http\Factory\UriFactory;
 
-class CorsTest extends \PHPUnit_Framework_TestCase
+class CorsTest extends TestCase
 {
 
     public function testShouldBeTrue()
