@@ -28,7 +28,7 @@ use Psr\Log\LoggerInterface;
 use Tuupola\Http\Factory\ResponseFactory;
 use Tuupola\Middleware\Cors\CallableHandler;
 
-class Cors implements MiddlewareInterface
+final class Cors implements MiddlewareInterface
 {
     protected $logger;
     private $settings;
