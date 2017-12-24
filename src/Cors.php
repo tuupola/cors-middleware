@@ -13,6 +13,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuupola\Middleware;
 
 use Interop\Http\Server\MiddlewareInterface;
@@ -28,6 +30,8 @@ use Tuupola\Middleware\Cors\CallableHandler;
 
 class Cors implements MiddlewareInterface
 {
+    protected $logger;
+    private $settings;
     private $options = [
         "origin" => "*",
         "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -37,10 +41,6 @@ class Cors implements MiddlewareInterface
         "cache" => 0,
         "error" => null
     ];
-
-    private $settings;
-
-    protected $logger;
 
     public function __construct($options)
     {
@@ -106,25 +106,29 @@ class Cors implements MiddlewareInterface
     }
 
     /**
-     * Hydate options from given array
-     *
-     * @param array $data Array of options.
-     * @return self
+     * Hydrate all options from the given array
      */
-    private function hydrate(array $data = [])
+    private function hydrate(array $data = []): void
     {
         foreach ($data as $key => $value) {
             /* https://github.com/facebook/hhvm/issues/6368 */
             $key = str_replace(".", " ", $key);
-            $method = "set" . ucwords($key);
+            $method = lcfirst(ucwords($key));
             $method = str_replace(" ", "", $method);
             if (method_exists($this, $method)) {
+                /* Try to use setter */
                 call_user_func([$this, $method], $value);
+            } else {
+                /* Or fallback to setting option directly */
+                print $key;
+                $this->options[$key] = $value;
             }
         }
-        return $this;
     }
 
+    /**
+     * Builds the neomerc/cors settings object
+     */
     private function buildSettings(ServerRequestInterface $request, ResponseInterface $response)
     {
         $origin = array_fill_keys((array) $this->options["origin"], true);
@@ -152,99 +156,54 @@ class Cors implements MiddlewareInterface
         return $this->settings;
     }
 
-    public function setOrigin($origin)
+    private function origin($origin): void
     {
-        $this->options["origin"] = $origin;
-        return $this;
+        $this->options["origin"] = (array) $origin;
     }
 
-    public function setMethods($methods)
+    private function methods($methods): void
     {
         if (is_callable($methods)) {
             $this->options["methods"] = $methods->bindTo($this);
         } else {
-            $this->options["methods"] = $methods;
+            $this->options["methods"] = (array) $methods;
         }
-
-        return $this;
     }
 
-    public function setHeadersAllow(array $headers)
+    private function headersAllow(array $headers): void
     {
         $this->options["headers.allow"] = $headers;
-        return $this;
     }
 
-    public function setHeadersExpose(array $headers)
+    private function headersExpose(array $headers): void
     {
         $this->options["headers.expose"] = $headers;
-        return $this;
     }
 
-    public function setCredentials($credentials)
+    private function credentials(bool $credentials): void
     {
-        $credentials = !!$credentials;
         $this->options["credentials"] = $credentials;
-        return $this;
     }
 
-    public function setCache($cache)
+    private function cache(int $cache): void
     {
         $this->options["cache"] = $cache;
-        return $this;
     }
 
-    /**
-     * Set the logger
-     *
-     * @return self
-     */
-    public function setLogger(LoggerInterface $logger = null)
+    private function error(callable $error): void
+    {
+        $this->options["error"] = $error->bindTo($this);
+    }
+
+    private function logger(LoggerInterface $logger = null)
     {
         $this->logger = $logger;
-        return $this;
-    }
-
-    /**
-     * Get the logger
-     *
-     * @return Psr\Log\LoggerInterface
-     */
-    public function getLogger()
-    {
-        return $this->logger;
-    }
-
-    /**
-     * Get the error handler
-     *
-     * @return string
-     */
-    public function getError()
-    {
-        return $this->options["error"];
-    }
-
-    /**
-     * Set the error handler
-     *
-     * @return self
-     */
-    public function setError($error)
-    {
-        $this->options["error"] = $error;
-        return $this;
     }
 
     /**
      * Call the error handler if it exists
-     *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @param mixed[] $arguments
-     * @return ResponseInterface
      */
-    public function processError(ServerRequestInterface $request, ResponseInterface $response, $arguments)
+    private function processError(ServerRequestInterface $request, ResponseInterface $response, array $arguments = null)
     {
         if (is_callable($this->options["error"])) {
             $handler_response = $this->options["error"]($request, $response, $arguments);

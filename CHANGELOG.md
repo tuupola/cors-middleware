@@ -6,8 +6,13 @@ All notable changes to this project will be documented in this file, in reverse 
 ### Added
 - Support for the [latest version of PSR-15](https://github.com/http-interop/http-server-middleware).
 
+### Changed
+- Settings can now be passed only in the constructor.
+- Origin must now always be passed as an array.
+
 ### Removed
 - Support for PHP 5.X. PSR-15 is now PHP 7.x only.
+- Public getters and setters for the settings.
 
 ## [0.5.2](https://github.com/tuupola/cors-middleware/compare/0.5.1...0.5.2) - 2016-08-12
 ### Fixed

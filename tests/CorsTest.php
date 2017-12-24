@@ -86,7 +86,7 @@ class CorsTest extends TestCase
 
         $response = (new ResponseFactory)->createResponse();
         $cors = new Cors([
-            "origin" => "http://www.example.com",
+            "origin" => ["http://www.example.com"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
@@ -138,7 +138,7 @@ class CorsTest extends TestCase
 
         $response = (new ResponseFactory)->createResponse();
         $cors = new Cors([
-            "origin" => ["*"],
+            "origin" => "*",
             "methods" => ["GET", "POST", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
@@ -166,7 +166,7 @@ class CorsTest extends TestCase
 
         $response = (new ResponseFactory)->createResponse();
         $cors = new Cors([
-            "origin" => ["*"],
+            "origin" => "*",
             "methods" => function ($request) {
                 return ["GET", "POST", "DELETE"];
             },
@@ -307,24 +307,6 @@ class CorsTest extends TestCase
         $this->assertEquals("Error", $response->getBody());
     }
 
-    public function testShouldSetAndGetError()
-    {
-        $cors = new Cors([]);
-        $cors->setError(function () {
-            return "error";
-        });
-        $error = $cors->getError();
-        $this->assertEquals("error", $error());
-    }
-
-    public function testShouldSetAndGetLogger()
-    {
-        $logger = new NullLogger;
-        $cors = new Cors([]);
-        $cors->setLogger($logger);
-        $this->assertInstanceOf("Psr\Log\NullLogger", $cors->getLogger());
-    }
-
     public function testShouldHandlePsr15()
     {
         $request = (new ServerRequestFactory)
@@ -339,7 +321,7 @@ class CorsTest extends TestCase
 
         $collection = new MiddlewareCollection([
             new Cors([
-                "origin" => "*",
+                "origin" => ["*"],
                 "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
                 "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
                 "headers.expose" => ["Authorization", "Etag"],
