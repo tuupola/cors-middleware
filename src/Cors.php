@@ -30,8 +30,7 @@ use Tuupola\Middleware\Cors\CallableHandler;
 
 final class Cors implements MiddlewareInterface
 {
-    protected $logger;
-    private $settings;
+    private $logger;
     private $options = [
         "origin" => "*",
         "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -44,8 +43,6 @@ final class Cors implements MiddlewareInterface
 
     public function __construct($options)
     {
-        $this->settings = new CorsSettings;
-
         /* Store passed in options overwriting any defaults. */
         $this->hydrate($options);
     }
@@ -139,8 +136,10 @@ final class Cors implements MiddlewareInterface
      */
     private function buildSettings(ServerRequestInterface $request, ResponseInterface $response): CorsSettings
     {
+        $settings = new CorsSettings;
+
         $origin = array_fill_keys((array) $this->options["origin"], true);
-        $this->settings->setRequestAllowedOrigins($origin);
+        $settings->setRequestAllowedOrigins($origin);
 
         if (is_callable($this->options["methods"])) {
             $methods = (array) $this->options["methods"]($request, $response);
@@ -148,20 +147,20 @@ final class Cors implements MiddlewareInterface
             $methods = $this->options["methods"];
         }
         $methods = array_fill_keys($methods, true);
-        $this->settings->setRequestAllowedMethods($methods);
+        $settings->setRequestAllowedMethods($methods);
 
         $headers = array_fill_keys($this->options["headers.allow"], true);
         $headers = array_change_key_case($headers, CASE_LOWER);
-        $this->settings->setRequestAllowedHeaders($headers);
+        $settings->setRequestAllowedHeaders($headers);
 
         $headers = array_fill_keys($this->options["headers.expose"], true);
-        $this->settings->setResponseExposedHeaders($headers);
+        $settings->setResponseExposedHeaders($headers);
 
-        $this->settings->setRequestCredentialsSupported($this->options["credentials"]);
+        $settings->setRequestCredentialsSupported($this->options["credentials"]);
 
-        $this->settings->setPreFlightCacheMaxAge($this->options["cache"]);
+        $settings->setPreFlightCacheMaxAge($this->options["cache"]);
 
-        return $this->settings;
+        return $settings;
     }
 
     /**
