@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file, in reverse 
 - Settings can now be passed only in the constructor.
 - PHP 7.1 is now minimum requirement.
 - Inside error handler `$this` now refers to the middleware itself.
+- PSR-7 double pass is now supported using [tuupola/callable-handler](https://github.com/tuupola/callable-handler) library.
 
 ### Removed
 - Support for PHP 5.X. PSR-15 is now PHP 7.x only.
