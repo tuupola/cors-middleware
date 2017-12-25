@@ -17,11 +17,12 @@ $ composer require tuupola/cors-middleware
 
 ## Usage
 
-Documentation assumes you have working knowledge of CORS. There are no mandatory parameters. If you are using Zend Expressive skeleton middlewares are added to file called `config/pipeline.php`.
+Documentation assumes you have working knowledge of CORS. There are no mandatory parameters. If you are using Zend Expressive skeleton middlewares are added to file called `config/pipeline.php`. Note that you must disable the default `ImplicitOptionsMiddleware` for this middleware to work.
 
 ```php
 use Tuupola\Middleware\CorsMiddleware;
 
+#$app->pipe(ImplicitOptionsMiddleware::class);
 $app->pipe(CorsMiddleware::class);
 ```
 
