@@ -28,10 +28,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Tuupola\Http\Factory\ResponseFactory;
-use Tuupola\Middleware\Cors\CallableHandler;
+use Tuupola\Middleware\DoublePassTrait;
 
 final class CorsMiddleware implements MiddlewareInterface
 {
+    use DoublePassTrait;
+
     private $logger;
     private $options = [
         "origin" => "*",
@@ -47,17 +49,6 @@ final class CorsMiddleware implements MiddlewareInterface
     {
         /* Store passed in options overwriting any defaults. */
         $this->hydrate($options);
-    }
-
-    /**
-     * Execute as PSR-7 double pass middleware.
-     */
-    public function __invoke(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        callable $next
-    ): ResponseInterface {
-        return $this->process($request, new CallableHandler($next, $response));
     }
 
     /**

@@ -21,7 +21,8 @@
         "php" : "^7.1",
         "neomerx/cors-psr7": "^1.0",
         "http-interop/http-server-middleware": "^1.0",
-        "tuupola/http-factory": "^0.3.0"
+        "tuupola/http-factory": "^0.3.0",
+        "tuupola/callable-handler": "^0.2.0"
     },
     "autoload": {
         "psr-4": {
