@@ -3,15 +3,17 @@
 /*
  * This file is part of the CORS middleware package
  *
- * Copyright (c) 2016 Mika Tuupola
+ * Copyright (c) 2016-2018 Mika Tuupola
  *
  * Licensed under the MIT license:
  *   http://www.opensource.org/licenses/mit-license.php
  *
- * Project home:
+ * See also:
  *   https://github.com/tuupola/cors-middleware
- *
+ *   https://github.com/neomerx/cors-psr7
+ *   https://www.w3.org/TR/cors/
  */
+
 
 declare(strict_types=1);
 
