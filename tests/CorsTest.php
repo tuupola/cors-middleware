@@ -39,7 +39,7 @@ class CorsTest extends TestCase
             ->createServerRequest("GET", "https://example.com/api");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new Cors([]);
+        $cors = new CorsMiddleware([]);
 
         $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
@@ -58,7 +58,7 @@ class CorsTest extends TestCase
             ->withHeader("Origin", "http://www.example.com");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new Cors([
+        $cors = new CorsMiddleware([
             "origin" => "*",
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
@@ -86,7 +86,7 @@ class CorsTest extends TestCase
             ->withHeader("Origin", "http://www.foo.com");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new Cors([
+        $cors = new CorsMiddleware([
             "origin" => ["http://www.example.com"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
@@ -111,7 +111,7 @@ class CorsTest extends TestCase
             ->withHeader("Origin", "http://mobile.example.com");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new Cors([
+        $cors = new CorsMiddleware([
             "origin" => ["http://www.example.com", "http://mobile.example.com"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
@@ -138,7 +138,7 @@ class CorsTest extends TestCase
             ->withHeader("Access-Control-Request-Method", "PUT");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new Cors([
+        $cors = new CorsMiddleware([
             "origin" => "*",
             "methods" => ["GET", "POST", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
@@ -166,7 +166,7 @@ class CorsTest extends TestCase
             ->withHeader("Access-Control-Request-Method", "PUT");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new Cors([
+        $cors = new CorsMiddleware([
             "origin" => "*",
             "methods" => function ($request) {
                 return ["GET", "POST", "DELETE"];
@@ -196,7 +196,7 @@ class CorsTest extends TestCase
             ->withHeader("Access-Control-Request-Method", "PUT");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new Cors([
+        $cors = new CorsMiddleware([
             "origin" => ["*"],
             "methods" => function ($request) {
                 return ["GET", "POST", "DELETE", "PUT"];
@@ -226,7 +226,7 @@ class CorsTest extends TestCase
             ->withHeader("Access-Control-Request-Method", "PUT");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new Cors([
+        $cors = new CorsMiddleware([
             "origin" => ["*"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
@@ -256,7 +256,7 @@ class CorsTest extends TestCase
             ->withHeader("Access-Control-Request-Method", "PUT");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new Cors([
+        $cors = new CorsMiddleware([
             "origin" => ["*"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
@@ -284,7 +284,7 @@ class CorsTest extends TestCase
 
         $response = (new ResponseFactory)->createResponse();
         $logger = new NullLogger;
-        $cors = new Cors([
+        $cors = new CorsMiddleware([
             "logger" => $logger,
             "origin" => ["*"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -321,7 +321,7 @@ class CorsTest extends TestCase
         };
 
         $collection = new MiddlewareCollection([
-            new Cors([
+            new CorsMiddleware([
                 "origin" => ["*"],
                 "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
                 "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],

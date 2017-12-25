@@ -30,7 +30,7 @@ use Psr\Log\LoggerInterface;
 use Tuupola\Http\Factory\ResponseFactory;
 use Tuupola\Middleware\Cors\CallableHandler;
 
-final class Cors implements MiddlewareInterface
+final class CorsMiddleware implements MiddlewareInterface
 {
     private $logger;
     private $options = [
