@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file, in reverse 
 - Settings can now be passed only in the constructor.
 - Origin must now always be passed as an array.
 - PHP 7.1 is now minimum requirement.
+- Inside error handler `$this` now refers to the middleware itself.
 
 ### Removed
 - Support for PHP 5.X. PSR-15 is now PHP 7.x only.
