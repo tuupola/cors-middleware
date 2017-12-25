@@ -43,7 +43,7 @@ final class CorsMiddleware implements MiddlewareInterface
         "error" => null
     ];
 
-    public function __construct($options)
+    public function __construct($options = [])
     {
         /* Store passed in options overwriting any defaults. */
         $this->hydrate($options);

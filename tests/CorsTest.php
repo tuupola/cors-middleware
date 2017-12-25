@@ -39,7 +39,7 @@ class CorsTest extends TestCase
             ->createServerRequest("GET", "https://example.com/api");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new CorsMiddleware([]);
+        $cors = new CorsMiddleware;
 
         $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
