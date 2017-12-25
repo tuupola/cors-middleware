@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## [0.6.0](https://github.com/tuupola/cors-middleware/compare/0.5.2...0.6.0) - unreleased
+## [0.6.0](https://github.com/tuupola/cors-middleware/compare/0.5.2...0.6.0) - 2017-12-25
 ### Added
 - Support for the [latest version of PSR-15](https://github.com/http-interop/http-server-middleware).
 
