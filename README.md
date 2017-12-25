@@ -105,6 +105,25 @@ Access-Control-Expose-Headers: Etag
 
 ## Other parameters
 
+### Methods
+
+Methods can be passed either as an array or a callable which returns an array. Below example is for Zend Expressive where value of `methods` is dynamic depending on the requested route.
+
+``` php
+use Psr\Http\Message\ServerRequestInterface;
+use Tuupola\Middleware\CorsMiddleware;
+use Zend\Expressive\Router\RouteResult;
+
+$app->pipe(new CorsMiddleware([
+    "origin" => ["*"],
+    "methods" => function(ServerRequestInterface $request) {
+        $result = $request->getAttribute(RouteResult::class);
+        $route = $result->getMatchedRoute();
+        return $route->getAllowedMethods();
+    }
+]));
+```
+
 ### Logger
 
 The optional `logger` parameter allows you to pass in a PSR-3 compatible logger to help with debugging or other application logging needs.
