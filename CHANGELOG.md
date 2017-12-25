@@ -2,14 +2,13 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## [0.6.0](https://github.com/tuupola/cors-middleware/compare/0.5.2...0.6.0) - unreleased
+## [0.6.0-dev](https://github.com/tuupola/cors-middleware/compare/0.5.2...0.6.0) - unreleased
 ### Added
 - Support for the [latest version of PSR-15](https://github.com/http-interop/http-server-middleware).
 
 ### Changed
 - Classname changed from Cors to CorsMiddleware.
 - Settings can now be passed only in the constructor.
-- Origin must now always be passed as an array.
 - PHP 7.1 is now minimum requirement.
 - Inside error handler `$this` now refers to the middleware itself.
 
