@@ -3,19 +3,21 @@
 /*
  * This file is part of the CORS middleware package
  *
- * Copyright (c) 2016 Mika Tuupola
+ * Copyright (c) 2016-2018 Mika Tuupola
  *
  * Licensed under the MIT license:
  *   http://www.opensource.org/licenses/mit-license.php
  *
- * Project home:
+ * See also:
  *   https://github.com/tuupola/cors-middleware
- *
+ *   https://github.com/neomerx/cors-psr7
+ *   https://www.w3.org/TR/cors/
  */
 
 namespace Tuupola\Middleware;
 
 use Equip\Dispatch\MiddlewareCollection;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\NullLogger;
@@ -23,7 +25,7 @@ use Tuupola\Http\Factory\ResponseFactory;
 use Tuupola\Http\Factory\ServerRequestFactory;
 use Tuupola\Http\Factory\UriFactory;
 
-class CorsTest extends \PHPUnit_Framework_TestCase
+class CorsTest extends TestCase
 {
 
     public function testShouldBeTrue()
@@ -37,7 +39,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
             ->createServerRequest("GET", "https://example.com/api");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new Cors([]);
+        $cors = new CorsMiddleware;
 
         $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
@@ -56,7 +58,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
             ->withHeader("Origin", "http://www.example.com");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new Cors([
+        $cors = new CorsMiddleware([
             "origin" => "*",
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
@@ -84,8 +86,8 @@ class CorsTest extends \PHPUnit_Framework_TestCase
             ->withHeader("Origin", "http://www.foo.com");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new Cors([
-            "origin" => "http://www.example.com",
+        $cors = new CorsMiddleware([
+            "origin" => ["http://www.example.com"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
@@ -109,7 +111,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
             ->withHeader("Origin", "http://mobile.example.com");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new Cors([
+        $cors = new CorsMiddleware([
             "origin" => ["http://www.example.com", "http://mobile.example.com"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
@@ -136,8 +138,8 @@ class CorsTest extends \PHPUnit_Framework_TestCase
             ->withHeader("Access-Control-Request-Method", "PUT");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new Cors([
-            "origin" => ["*"],
+        $cors = new CorsMiddleware([
+            "origin" => "*",
             "methods" => ["GET", "POST", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
@@ -164,8 +166,8 @@ class CorsTest extends \PHPUnit_Framework_TestCase
             ->withHeader("Access-Control-Request-Method", "PUT");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new Cors([
-            "origin" => ["*"],
+        $cors = new CorsMiddleware([
+            "origin" => "*",
             "methods" => function ($request) {
                 return ["GET", "POST", "DELETE"];
             },
@@ -194,7 +196,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
             ->withHeader("Access-Control-Request-Method", "PUT");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new Cors([
+        $cors = new CorsMiddleware([
             "origin" => ["*"],
             "methods" => function ($request) {
                 return ["GET", "POST", "DELETE", "PUT"];
@@ -224,7 +226,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
             ->withHeader("Access-Control-Request-Method", "PUT");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new Cors([
+        $cors = new CorsMiddleware([
             "origin" => ["*"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
@@ -254,7 +256,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
             ->withHeader("Access-Control-Request-Method", "PUT");
 
         $response = (new ResponseFactory)->createResponse();
-        $cors = new Cors([
+        $cors = new CorsMiddleware([
             "origin" => ["*"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
@@ -282,7 +284,7 @@ class CorsTest extends \PHPUnit_Framework_TestCase
 
         $response = (new ResponseFactory)->createResponse();
         $logger = new NullLogger;
-        $cors = new Cors([
+        $cors = new CorsMiddleware([
             "logger" => $logger,
             "origin" => ["*"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -306,24 +308,6 @@ class CorsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("Error", $response->getBody());
     }
 
-    public function testShouldSetAndGetError()
-    {
-        $cors = new Cors([]);
-        $cors->setError(function () {
-            return "error";
-        });
-        $error = $cors->getError();
-        $this->assertEquals("error", $error());
-    }
-
-    public function testShouldSetAndGetLogger()
-    {
-        $logger = new NullLogger;
-        $cors = new Cors([]);
-        $cors->setLogger($logger);
-        $this->assertInstanceOf("Psr\Log\NullLogger", $cors->getLogger());
-    }
-
     public function testShouldHandlePsr15()
     {
         $request = (new ServerRequestFactory)
@@ -337,8 +321,8 @@ class CorsTest extends \PHPUnit_Framework_TestCase
         };
 
         $collection = new MiddlewareCollection([
-            new Cors([
-                "origin" => "*",
+            new CorsMiddleware([
+                "origin" => ["*"],
                 "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
                 "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
                 "headers.expose" => ["Authorization", "Etag"],
