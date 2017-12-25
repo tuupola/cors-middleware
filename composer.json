@@ -1,10 +1,11 @@
 {
     "name": "tuupola/cors-middleware",
-    "description": "PSR-7 CORS Middleware",
+    "description": "PSR-7 and PSR-15 CORS Middleware",
     "keywords": [
-        "slim",
         "middleware",
-        "cors"
+        "cors",
+        "psr-7",
+        "psr-15"
     ],
     "homepage": "https://github.com/tuupola/cors-middleware",
     "license": "MIT",
