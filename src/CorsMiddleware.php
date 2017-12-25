@@ -28,7 +28,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Tuupola\Http\Factory\ResponseFactory;
-use Tuupola\Middleware\Cors\CallableHandler;
 
 final class CorsMiddleware implements MiddlewareInterface
 {
