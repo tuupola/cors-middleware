@@ -20,13 +20,15 @@ $ composer require tuupola/cors-middleware
 Documentation assumes you have working knowledge of CORS. There are no mandatory parameters. If you are using Zend Expressive skeleton middlewares are added to file called `config/pipeline.php`.
 
 ```php
-$app->pipe(new Tuupola\Middleware\Cors);
+use Tuupola\Middleware\CorsMiddleware;
+
+$app->pipe(CorsMiddleware::class);
 ```
 
-Slim Framework does not have specified config files. Otherwise adding the middleware is almost identical with previous.
+Slim Framework does not have specified config files. Otherwise adding the middleware is similar with previous.
 
 ```php
-$app->add(new Tuupola\Middleware\Cors);
+$app->add(new Tuupola\Middleware\CorsMiddleware);
 ```
 
 Rest of the examples use Slim Framework.
@@ -34,7 +36,7 @@ Rest of the examples use Slim Framework.
 If called without any parameters the following defaults are used.
 
 ```php
-$app->add(new Tuupola\Middleware\Cors([
+$app->add(new Tuupola\Middleware\CorsMiddleware([
     "origin" => ["*"],
     "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
     "headers.allow" => [],
@@ -61,7 +63,7 @@ However, you most likely want to change some of the defaults. For example if dev
 
 
 ```php
-$app->add(new Tuupola\Middleware\Cors([
+$app->add(new Tuupola\Middleware\CorsMiddleware([
     "origin" => ["*"],
     "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
     "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
@@ -112,7 +114,7 @@ $logger = Monolog\Logger("slim");
 $rotating = new RotatingFileHandler(__DIR__ . "/logs/slim.log", 0, Logger::DEBUG);
 $logger->pushHandler($rotating);
 
-$app->add(new Tuupola\Middleware\Cors([
+$app->add(new Tuupola\Middleware\CorsMiddleware([
     "logger" => $logger,
 ]));
 ```
@@ -122,7 +124,7 @@ $app->add(new Tuupola\Middleware\Cors([
 Error is called when CORS request fails. It receives last error message in arguments. This can be used for example to create `application/json` responses when CORS request fails.
 
 ``` php
-$app->add(new Tuupola\Middleware\Cors([
+$app->add(new Tuupola\Middleware\CorsMiddleware([
     "methods" => ["GET", "POST", "PUT"],
     "error" => function ($request, $response, $arguments) {
         $data["status"] = "error";
