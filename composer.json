@@ -36,10 +36,10 @@
     },
     "require-dev": {
         "zendframework/zend-diactoros": "^1.0",
-        "squizlabs/php_codesniffer": "^2.5",
         "overtrue/phplint": "^1.0",
         "equip/dispatch": "^1.0",
         "phpunit/phpunit": "^6.5",
-        "codedungeon/phpunit-result-printer": "^0.4.4"
+        "codedungeon/phpunit-result-printer": "^0.4.4",
+        "squizlabs/php_codesniffer": "^3.2"
     }
 }
