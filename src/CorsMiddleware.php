@@ -19,11 +19,11 @@ declare(strict_types=1);
 
 namespace Tuupola\Middleware;
 
-use Interop\Http\Server\MiddlewareInterface;
-use Interop\Http\Server\RequestHandlerInterface;
 use Neomerx\Cors\Analyzer as CorsAnalyzer;
 use Neomerx\Cors\Contracts\AnalysisResultInterface as CorsAnalysisResultInterface;
 use Neomerx\Cors\Strategies\Settings as CorsSettings;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
