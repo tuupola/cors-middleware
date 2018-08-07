@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
 ## [0.8.0-dev](https://github.com/tuupola/cors-middleware/compare/0.7.0...master) - unreleased
+### Added
+- Support for the stable version of PSR-17
+
 ### Changed
 - Use released version of [equip/dispatch](https://github.com/equip/dispatch) in tests.
 
