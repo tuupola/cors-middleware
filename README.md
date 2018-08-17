@@ -173,6 +173,25 @@ Content-Length: 83
 }
 ```
 
+### Server origin
+
+If your same-origin requests contain an unnecessary `Origin` header, they might get blocked in case the server origin is not among the allowed origins already. In this case you can use the optional `origin.server` parameter to specify the origin of the server.
+
+``` php
+$app->add(new Tuupola\Middleware\CorsMiddleware([
+    "origin.server" => "https://example.com"
+]));
+```
+
+```
+$ curl https://example.com/api \
+    --request POST \
+    --include \
+    --header "Origin: https://example.com"
+
+HTTP/1.1 200 OK
+```
+
 ## Testing
 
 You can run tests either manually or automatically on every code change. Automatic tests require [entr](http://entrproject.org/) to work.
