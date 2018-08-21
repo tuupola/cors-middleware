@@ -41,6 +41,7 @@ final class CorsMiddleware implements MiddlewareInterface
         "headers.allow" => [],
         "headers.expose" => [],
         "credentials" => false,
+        "origin.server" => null,
         "cache" => 0,
         "error" => null
     ];
@@ -151,6 +152,10 @@ final class CorsMiddleware implements MiddlewareInterface
 
         $settings->setRequestCredentialsSupported($this->options["credentials"]);
 
+        if (is_string($this->options["origin.server"])) {
+            $settings->setServerOrigin($this->options["origin.server"]);
+        }
+
         $settings->setPreFlightCacheMaxAge($this->options["cache"]);
 
         return $settings;
@@ -198,6 +203,14 @@ final class CorsMiddleware implements MiddlewareInterface
     private function credentials(bool $credentials): void
     {
         $this->options["credentials"] = $credentials;
+    }
+
+    /**
+     * Set the server origin.
+     */
+    private function originServer(?string $origin): void
+    {
+        $this->options["origin.server"] = $origin;
     }
 
     /**

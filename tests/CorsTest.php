@@ -274,6 +274,28 @@ class CorsTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
+    public function testShouldReturn200WithNoCorsHeaders()
+    {
+        $request = (new ServerRequestFactory)
+            ->createServerRequest("GET", "https://example.com/api")
+            ->withHeader("Origin", "https://example.com");
+
+        $response = (new ResponseFactory)->createResponse();
+        $cors = new CorsMiddleware([
+            "origin" => [],
+            "origin.server" => "https://example.com"
+        ]);
+
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            $response->getBody()->write("Foo");
+            return $response;
+        };
+
+        $response = $cors($request, $response, $next);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEmpty($response->getHeaderLine("Access-Control-Allow-Origin"));
+    }
+
     public function testShouldCallError()
     {
         $request = (new ServerRequestFactory)
