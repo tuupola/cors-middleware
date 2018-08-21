@@ -2,7 +2,11 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## [0.8.0](https://github.com/tuupola/cors-middleware/compare/0.7.0..0.8.0) - 2018-08-07
+## [0.9.0](https://github.com/tuupola/cors-middleware/compare/0.8.0...0.9.0) - 2018-08-21
+### Added
+- New option `origin.server` to specify the origin of the server. Helps when same-origin requests include a valid but unesseccary `Origin` header ([#23](https://github.com/tuupola/cors-middleware/pull/23)).
+
+## [0.8.0](https://github.com/tuupola/cors-middleware/compare/0.7.0...0.8.0) - 2018-08-07
 ### Added
 - Support for the stable version of PSR-17
 
