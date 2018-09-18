@@ -3,6 +3,7 @@
 This middleware implements [Cross-origin resource sharing](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing). It supports both PSR-7 style doublepass and PSR-15 middleware standards. It has been tested  with [Slim Framework](http://www.slimframework.com/) and [Zend Expressive](https://zendframework.github.io/zend-expressive/). Internally the middleware uses [neomerx/cors-psr7](https://github.com/neomerx/cors-psr7) library for heavy lifting.
 
 [![Latest Version](https://img.shields.io/packagist/v/tuupola/cors-middleware.svg?style=flat-square)](https://packagist.org/packages/tuupola/cors-middleware)
+[![Packagist](https://img.shields.io/packagist/dm/tuupola/cors-middleware.svg)](https://packagist.org/packages/tuupola/cors-middleware)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Build Status](https://img.shields.io/travis/tuupola/cors-middleware/master.svg?style=flat-square)](https://travis-ci.org/tuupola/cors-middleware)
 [![Coverage](https://img.shields.io/codecov/c/github/tuupola/cors-middleware.svg?style=flat-square)](https://codecov.io/github/tuupola/cors-middleware)
