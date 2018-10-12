@@ -17,6 +17,9 @@
             "role": "Developer"
         }
     ],
+    "config": {
+      "sort-packages": true
+    },
     "require": {
         "php" : "^7.1",
         "neomerx/cors-psr7": "^1.0",
@@ -35,11 +38,11 @@
         }
     },
     "require-dev": {
-        "zendframework/zend-diactoros": "^1.0",
-        "overtrue/phplint": "^1.0",
+        "codedungeon/phpunit-result-printer": "^0.23.2",
         "equip/dispatch": "^2.0",
-        "codedungeon/phpunit-result-printer": "^0.4.4",
+        "overtrue/phplint": "^1.0",
+        "phpunit/phpunit": "^7.4",
         "squizlabs/php_codesniffer": "^3.2",
-        "phpunit/phpunit": "^7.4"
+        "zendframework/zend-diactoros": "^1.0"
     }
 }
