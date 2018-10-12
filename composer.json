@@ -38,8 +38,8 @@
         "zendframework/zend-diactoros": "^1.0",
         "overtrue/phplint": "^1.0",
         "equip/dispatch": "^2.0",
-        "phpunit/phpunit": "^6.5",
         "codedungeon/phpunit-result-printer": "^0.4.4",
-        "squizlabs/php_codesniffer": "^3.2"
+        "squizlabs/php_codesniffer": "^3.2",
+        "phpunit/phpunit": "^7.4"
     }
 }
