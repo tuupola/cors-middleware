@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file, in reverse 
 
 ## [0.9.1](https://github.com/tuupola/cors-middleware/compare/0.9.0...0.9.1) - 2018-10-15
 ### Added
-- Support for tuupola/callable-handler:^1.0 and tuupola/http-factory:^1.0
+- Support for `tuupola/callable-handler:^1.0` and `tuupola/http-factory:^1.0`
 
 ### Changed
 - `neomerx/cors-psr7:^1.0.4` is now minimum requirement.
