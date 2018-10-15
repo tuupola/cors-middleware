@@ -22,7 +22,7 @@
     },
     "require": {
         "php" : "^7.1",
-        "neomerx/cors-psr7": "^1.0",
+        "neomerx/cors-psr7": "^1.0.4",
         "tuupola/http-factory": "^0.4.0|^1.0",
         "tuupola/callable-handler": "^0.3.0|^0.4.0|^1.0",
         "psr/http-server-middleware": "^1.0"
