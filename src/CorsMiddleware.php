@@ -35,6 +35,7 @@ SOFTWARE.
 
 namespace Tuupola\Middleware;
 
+use Closure;
 use Neomerx\Cors\Analyzer as CorsAnalyzer;
 use Neomerx\Cors\Contracts\AnalysisResultInterface as CorsAnalysisResultInterface;
 use Neomerx\Cors\Strategies\Settings as CorsSettings;
@@ -191,7 +192,11 @@ final class CorsMiddleware implements MiddlewareInterface
     private function methods($methods): void
     {
         if (is_callable($methods)) {
-            $this->options["methods"] = $methods->bindTo($this);
+            if ($methods instanceof Closure) {
+                $this->options["methods"] = $methods->bindTo($this);
+            } else {
+                $this->options["methods"] = $methods;
+            }
         } else {
             $this->options["methods"] = (array) $methods;
         }
