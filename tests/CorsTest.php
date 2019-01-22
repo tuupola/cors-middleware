@@ -313,7 +313,7 @@ class CorsTest extends TestCase
         $this->assertEmpty($response->getHeaderLine("Access-Control-Allow-Origin"));
     }
 
-    public function testShouldCallError()
+    public function testShouldCallAnonymousErrorFunction()
     {
         $request = (new ServerRequestFactory)
             ->createServerRequest("OPTIONS", "https://example.com/api")
@@ -345,6 +345,37 @@ class CorsTest extends TestCase
         $response = $cors($request, $response, $next);
         $this->assertEquals(401, $response->getStatusCode());
         $this->assertEquals("Error", $response->getBody());
+    }
+
+    public function testShouldCallInvokableErrorClass()
+    {
+        $request = (new ServerRequestFactory)
+            ->createServerRequest("OPTIONS", "https://example.com/api")
+            ->withHeader("Origin", "http://www.example.com")
+            ->withHeader("Access-Control-Request-Headers", "X-Nosuch")
+            ->withHeader("Access-Control-Request-Method", "PUT");
+
+        $response = (new ResponseFactory)->createResponse();
+        $logger = new NullLogger;
+        $cors = new CorsMiddleware([
+            "logger" => $logger,
+            "origin" => ["*"],
+            "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
+            "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
+            "headers.expose" => ["Authorization", "Etag"],
+            "credentials" => true,
+            "cache" => 86400,
+            "error" => new TestErrorHandler
+        ]);
+
+        $next = function (Request $request, Response $response) {
+            $response->getBody()->write("Foo");
+            return $response;
+        };
+
+        $response = $cors($request, $response, $next);
+        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertEquals(TestErrorHandler::class, $response->getBody());
     }
 
     public function testShouldHandlePsr15()
