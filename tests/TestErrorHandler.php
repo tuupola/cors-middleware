@@ -46,4 +46,13 @@ class TestErrorHandler
         $response->getBody()->write(self::class);
         return $response;
     }
+
+    public static function error(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        array $arguments
+    ) {
+        $response->getBody()->write(self::class);
+        return $response;
+    }
 }
