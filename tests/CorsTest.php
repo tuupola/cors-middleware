@@ -204,7 +204,7 @@ class CorsTest extends TestCase
         $this->assertEquals(401, $response->getStatusCode());
     }
 
-    public function testShouldReturn200WithCorrectMethodFromFunction()
+    public function testShouldReturn401WithWrongMethodFromInvokableClass()
     {
         $request = (new ServerRequestFactory)
             ->createServerRequest("OPTIONS", "https://example.com/api")
@@ -214,10 +214,95 @@ class CorsTest extends TestCase
 
         $response = (new ResponseFactory)->createResponse();
         $cors = new CorsMiddleware([
+            "origin" => "*",
+            "methods" => new TestMethodsHandler,
+            "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
+            "headers.expose" => ["Authorization", "Etag"],
+            "credentials" => true,
+            "cache" => 86400
+        ]);
+
+        $next = function (Request $request, Response $response) {
+            $response->getBody()->write("Foo");
+            return $response;
+        };
+
+        $response = $cors($request, $response, $next);
+
+        $this->assertEquals(401, $response->getStatusCode());
+    }
+
+
+    public function testShouldReturn200WithCorrectMethodFromFunction()
+    {
+        $request = (new ServerRequestFactory)
+            ->createServerRequest("OPTIONS", "https://example.com/api")
+            ->withHeader("Origin", "http://www.example.com")
+            ->withHeader("Access-Control-Request-Headers", "Authorization")
+            ->withHeader("Access-Control-Request-Method", "DELETE");
+
+        $response = (new ResponseFactory)->createResponse();
+        $cors = new CorsMiddleware([
             "origin" => ["*"],
             "methods" => function ($request) {
-                return ["GET", "POST", "DELETE", "PUT"];
+                return ["GET", "POST", "DELETE"];
             },
+            "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
+            "headers.expose" => ["Authorization", "Etag"],
+            "credentials" => true,
+            "cache" => 86400
+        ]);
+
+        $next = function (Request $request, Response $response) {
+            $response->getBody()->write("Foo");
+            return $response;
+        };
+
+        $response = $cors($request, $response, $next);
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testShouldReturn200WithCorrectMethodFromInvokableClass()
+    {
+        $request = (new ServerRequestFactory)
+            ->createServerRequest("OPTIONS", "https://example.com/api")
+            ->withHeader("Origin", "http://www.example.com")
+            ->withHeader("Access-Control-Request-Headers", "Authorization")
+            ->withHeader("Access-Control-Request-Method", "DELETE");
+
+        $response = (new ResponseFactory)->createResponse();
+        $cors = new CorsMiddleware([
+            "origin" => ["*"],
+            "methods" => new TestMethodsHandler,
+            "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
+            "headers.expose" => ["Authorization", "Etag"],
+            "credentials" => true,
+            "cache" => 86400
+        ]);
+
+        $next = function (Request $request, Response $response) {
+            $response->getBody()->write("Foo");
+            return $response;
+        };
+
+        $response = $cors($request, $response, $next);
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testShouldReturn200WithCorrectMethodUsingArrayNotation()
+    {
+        $request = (new ServerRequestFactory)
+            ->createServerRequest("OPTIONS", "https://example.com/api")
+            ->withHeader("Origin", "http://www.example.com")
+            ->withHeader("Access-Control-Request-Headers", "Authorization")
+            ->withHeader("Access-Control-Request-Method", "DELETE");
+
+        $response = (new ResponseFactory)->createResponse();
+        $cors = new CorsMiddleware([
+            "origin" => ["*"],
+            "methods" => [TestMethodsHandler::class, "methods"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
