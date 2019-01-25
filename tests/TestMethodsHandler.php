@@ -42,4 +42,9 @@ class TestMethodsHandler
     {
         return ["GET", "POST", "DELETE"];
     }
+
+    public static function methods(ServerRequestInterface $request)
+    {
+        return ["GET", "POST", "DELETE"];
+    }
 }
