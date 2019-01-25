@@ -247,7 +247,11 @@ final class CorsMiddleware implements MiddlewareInterface
      */
     private function error(callable $error): void
     {
-        $this->options["error"] = $error->bindTo($this);
+        if ($error instanceof Closure) {
+            $this->options["error"] = $error->bindTo($this);
+        } else {
+            $this->options["error"] = $error;
+        }
     }
 
     /**
