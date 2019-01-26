@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## [0.9.2](https://github.com/tuupola/cors-middleware/compare/0.9.1...0.9.2) - 2010-01-26
+### Fixed
+- Do not assume `error` and `methods` callables are an instance of a `Closure` ([#26](https://github.com/tuupola/cors-middleware/issues/26)).
+
 ## [0.9.1](https://github.com/tuupola/cors-middleware/compare/0.9.0...0.9.1) - 2018-10-15
 ### Added
 - Support for `tuupola/callable-handler:^1.0` and `tuupola/http-factory:^1.0`
