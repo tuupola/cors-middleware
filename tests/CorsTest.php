@@ -459,7 +459,7 @@ class CorsTest extends TestCase
         };
 
         $response = $cors($request, $response, $next);
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertEquals(402, $response->getStatusCode());
         $this->assertEquals(TestErrorHandler::class, $response->getBody());
     }
 
@@ -490,7 +490,7 @@ class CorsTest extends TestCase
         };
 
         $response = $cors($request, $response, $next);
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertEquals(418, $response->getStatusCode());
         $this->assertEquals(TestErrorHandler::class, $response->getBody());
     }
 

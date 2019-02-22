@@ -84,17 +84,20 @@ final class CorsMiddleware implements MiddlewareInterface
 
         switch ($cors->getRequestType()) {
             case CorsAnalysisResultInterface::ERR_ORIGIN_NOT_ALLOWED:
+                $response = $response->withStatus(401);
                 return $this->processError($request, $response, [
                     "message" => "CORS request origin is not allowed.",
-                ])->withStatus(401);
+                ]);
             case CorsAnalysisResultInterface::ERR_METHOD_NOT_SUPPORTED:
+                $response = $response->withStatus(401);
                 return $this->processError($request, $response, [
                     "message" => "CORS requested method is not supported.",
-                ])->withStatus(401);
+                ]);
             case CorsAnalysisResultInterface::ERR_HEADERS_NOT_SUPPORTED:
+                $response = $response->withStatus(401);
                 return $this->processError($request, $response, [
                     "message" => "CORS requested header is not allowed.",
-                ])->withStatus(401);
+                ]);
             case CorsAnalysisResultInterface::TYPE_PRE_FLIGHT_REQUEST:
                 $cors_headers = $cors->getResponseHeaders();
                 foreach ($cors_headers as $header => $value) {
