@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## [0.9.3](https://github.com/tuupola/cors-middleware/compare/0.9.2...0.9.3) - 2010-02-22
+### Fixed
+- Allow `error` handler to override HTTP status code ([#30](https://github.com/tuupola/cors-middleware/issues/30), [#31](https://github.com/tuupola/cors-middleware/pull/31)).
+
 ## [0.9.2](https://github.com/tuupola/cors-middleware/compare/0.9.1...0.9.2) - 2010-01-26
 ### Fixed
 - Do not assume `error` and `methods` callables are an instance of a `Closure` ([#26](https://github.com/tuupola/cors-middleware/issues/26)).
