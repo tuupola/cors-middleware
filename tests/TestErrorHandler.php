@@ -44,7 +44,7 @@ class TestErrorHandler
         array $arguments
     ) {
         $response->getBody()->write(self::class);
-        return $response;
+        return $response->withStatus(402);
     }
 
     public static function error(
@@ -53,6 +53,6 @@ class TestErrorHandler
         array $arguments
     ) {
         $response->getBody()->write(self::class);
-        return $response;
+        return $response->withStatus(418);
     }
 }
