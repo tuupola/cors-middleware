@@ -112,18 +112,37 @@ Access-Control-Expose-Headers: Etag
 Methods can be passed either as an array or a callable which returns an array. Below example is for Zend Expressive where value of `methods` is dynamic depending on the requested route.
 
 ``` php
-use Psr\Http\Message\ServerRequestInterface;
 use Tuupola\Middleware\CorsMiddleware;
 use Zend\Expressive\Router\RouteResult;
 
 $app->pipe(new CorsMiddleware([
     "origin" => ["*"],
-    "methods" => function(ServerRequestInterface $request) {
+    "methods" => function($request) {
         $result = $request->getAttribute(RouteResult::class);
         $route = $result->getMatchedRoute();
         return $route->getAllowedMethods();
     }
 ]));
+```
+
+Same thing for Slim 3.
+
+``` php
+use Fastroute\Dispatcher;
+use Tuupola\Middleware\CorsMiddleware;
+
+$app->add(
+    new CorsMiddleware([
+        "origin" => ["*"],
+        "methods" => function($request) use ($app) {
+            $container = $app->getContainer();
+            $dispatch = $container["router"]->dispatch($request);
+            if (Dispatcher::METHOD_NOT_ALLOWED === $dispatch[0]) {
+                return $dispatch[1];
+            }
+        }
+    ])
+);
 ```
 
 ### Logger
