@@ -28,9 +28,9 @@ static: vendor
 watch: vendor
 	find . -name "*.php" -not -path "./vendor/*" -o -name "*.json" -not -path "./vendor/*" | entr -c make test
 
-test: lint unit static
+test: lint unit #static
 
-travis: lint unit static
+travis: lint unit #static
 
 clean:
 	rm -rf vendor
