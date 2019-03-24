@@ -135,9 +135,11 @@ final class CorsMiddleware implements MiddlewareInterface
             $key = str_replace(".", " ", $key);
             $method = lcfirst(ucwords($key));
             $method = str_replace(" ", "", $method);
-            if (method_exists($this, $method)) {
+            $callable = [$this, $method];
+
+            if (is_callable($callable)) {
                 /* Try to use setter */
-                call_user_func([$this, $method], $value);
+                call_user_func($callable, $value);
             } else {
                 /* Or fallback to setting option directly */
                 $this->options[$key] = $value;

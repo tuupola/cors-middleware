@@ -1,0 +1,3 @@
+parameters:
+	ignoreErrors:
+		- '#Parameter \#2 $value of method Psr\Http\Message\MessageInterface::withHeader() expects array<string>|string, array|string given.#'
