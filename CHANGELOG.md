@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## [0.9.4](https://github.com/tuupola/cors-middleware/compare/0.9.3...0.9.4) - unreleased
+### Changed
+- `psr/http-message:^1.0.1` is now minimum requirement.
+
+### Added
+- Static analysis ([#32](https://github.com/tuupola/cors-middleware/pull/32)).
+
 ## [0.9.3](https://github.com/tuupola/cors-middleware/compare/0.9.2...0.9.3) - 2010-02-25
 ### Fixed
 - Allow `error` handler to override HTTP status code ([#30](https://github.com/tuupola/cors-middleware/issues/30), [#31](https://github.com/tuupola/cors-middleware/pull/31)).
