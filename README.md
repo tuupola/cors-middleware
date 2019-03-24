@@ -125,7 +125,7 @@ $app->pipe(new CorsMiddleware([
 ]));
 ```
 
-Same thing for Slim 3.
+Same thing for Slim 3. This assumes you have **not** defined the `OPTIONS` route.
 
 ``` php
 use Fastroute\Dispatcher;
