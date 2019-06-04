@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## [1.0.0](https://github.com/tuupola/cors-middleware/compare/0.9.4...1.0.0) - unreleased
+### Changed
+- `tuupola/callable-handler:^1.0` is now minimum requirement.
+- `tuupola/http-factory:^1.0` is now minimum requirement.
+
 ## [0.9.4](https://github.com/tuupola/cors-middleware/compare/0.9.3...0.9.4) - 2019-03-24
 ### Changed
 - `psr/http-message:^1.0.1` is now minimum requirement.
