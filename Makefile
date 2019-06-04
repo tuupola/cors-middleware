@@ -35,5 +35,7 @@ travis: lint unit static
 clean:
 	rm -rf vendor
 	rm composer.lock
+	rm .phplint-cache
+	rm -rf report
 
 .PHONY: help lint unit watch test travis clean
