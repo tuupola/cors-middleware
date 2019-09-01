@@ -74,7 +74,7 @@ final class CorsMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $response = (new ResponseFactory)->createResponse();
+        $response = (new ResponseFactory())->createResponse();
 
         $analyzer = CorsAnalyzer::instance($this->buildSettings($request, $response));
         if ($this->logger) {
@@ -152,7 +152,7 @@ final class CorsMiddleware implements MiddlewareInterface
      */
     private function buildSettings(ServerRequestInterface $request, ResponseInterface $response): CorsSettings
     {
-        $settings = new CorsSettings;
+        $settings = new CorsSettings();
 
         $origin = array_fill_keys((array) $this->options["origin"], true);
         $settings->setRequestAllowedOrigins($origin);

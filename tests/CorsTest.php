@@ -52,11 +52,11 @@ class CorsTest extends TestCase
 
     public function testShouldReturn200ByDefault()
     {
-        $request = (new ServerRequestFactory)
+        $request = (new ServerRequestFactory())
             ->createServerRequest("GET", "https://example.com/api");
 
-        $response = (new ResponseFactory)->createResponse();
-        $cors = new CorsMiddleware;
+        $response = (new ResponseFactory())->createResponse();
+        $cors = new CorsMiddleware();
 
         $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
@@ -70,11 +70,11 @@ class CorsTest extends TestCase
 
     public function testShouldHaveCorsHeaders()
     {
-        $request = (new ServerRequestFactory)
+        $request = (new ServerRequestFactory())
             ->createServerRequest("GET", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com");
 
-        $response = (new ResponseFactory)->createResponse();
+        $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware([
             "origin" => "*",
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -98,11 +98,11 @@ class CorsTest extends TestCase
 
     public function testShouldReturn401WithWrongOrigin()
     {
-        $request = (new ServerRequestFactory)
+        $request = (new ServerRequestFactory())
             ->createServerRequest("GET", "https://example.com/api")
             ->withHeader("Origin", "http://www.foo.com");
 
-        $response = (new ResponseFactory)->createResponse();
+        $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware([
             "origin" => ["http://www.example.com"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -123,11 +123,11 @@ class CorsTest extends TestCase
 
     public function testShouldReturn200WithCorrectOrigin()
     {
-        $request = (new ServerRequestFactory)
+        $request = (new ServerRequestFactory())
             ->createServerRequest("GET", "https://example.com/api")
             ->withHeader("Origin", "http://mobile.example.com");
 
-        $response = (new ResponseFactory)->createResponse();
+        $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware([
             "origin" => ["http://www.example.com", "http://mobile.example.com"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -148,13 +148,13 @@ class CorsTest extends TestCase
 
     public function testShouldReturn401WithWrongMethod()
     {
-        $request = (new ServerRequestFactory)
+        $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com")
             ->withHeader("Access-Control-Request-Headers", "Authorization")
             ->withHeader("Access-Control-Request-Method", "PUT");
 
-        $response = (new ResponseFactory)->createResponse();
+        $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware([
             "origin" => "*",
             "methods" => ["GET", "POST", "DELETE"],
@@ -176,13 +176,13 @@ class CorsTest extends TestCase
 
     public function testShouldReturn401WithWrongMethodFromFunction()
     {
-        $request = (new ServerRequestFactory)
+        $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com")
             ->withHeader("Access-Control-Request-Headers", "Authorization")
             ->withHeader("Access-Control-Request-Method", "PUT");
 
-        $response = (new ResponseFactory)->createResponse();
+        $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware([
             "origin" => "*",
             "methods" => function ($request) {
@@ -206,16 +206,16 @@ class CorsTest extends TestCase
 
     public function testShouldReturn401WithWrongMethodFromInvokableClass()
     {
-        $request = (new ServerRequestFactory)
+        $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com")
             ->withHeader("Access-Control-Request-Headers", "Authorization")
             ->withHeader("Access-Control-Request-Method", "PUT");
 
-        $response = (new ResponseFactory)->createResponse();
+        $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware([
             "origin" => "*",
-            "methods" => new TestMethodsHandler,
+            "methods" => new TestMethodsHandler(),
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
@@ -235,13 +235,13 @@ class CorsTest extends TestCase
 
     public function testShouldReturn200WithCorrectMethodFromFunction()
     {
-        $request = (new ServerRequestFactory)
+        $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com")
             ->withHeader("Access-Control-Request-Headers", "Authorization")
             ->withHeader("Access-Control-Request-Method", "DELETE");
 
-        $response = (new ResponseFactory)->createResponse();
+        $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware([
             "origin" => ["*"],
             "methods" => function ($request) {
@@ -265,16 +265,16 @@ class CorsTest extends TestCase
 
     public function testShouldReturn200WithCorrectMethodFromInvokableClass()
     {
-        $request = (new ServerRequestFactory)
+        $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com")
             ->withHeader("Access-Control-Request-Headers", "Authorization")
             ->withHeader("Access-Control-Request-Method", "DELETE");
 
-        $response = (new ResponseFactory)->createResponse();
+        $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware([
             "origin" => ["*"],
-            "methods" => new TestMethodsHandler,
+            "methods" => new TestMethodsHandler(),
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
@@ -293,13 +293,13 @@ class CorsTest extends TestCase
 
     public function testShouldReturn200WithCorrectMethodUsingArrayNotation()
     {
-        $request = (new ServerRequestFactory)
+        $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com")
             ->withHeader("Access-Control-Request-Headers", "Authorization")
             ->withHeader("Access-Control-Request-Method", "DELETE");
 
-        $response = (new ResponseFactory)->createResponse();
+        $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware([
             "origin" => ["*"],
             "methods" => [TestMethodsHandler::class, "methods"],
@@ -321,13 +321,13 @@ class CorsTest extends TestCase
 
     public function testShouldReturn401WithWrongHeader()
     {
-        $request = (new ServerRequestFactory)
+        $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com")
             ->withHeader("Access-Control-Request-Headers", "X-Nosuch")
             ->withHeader("Access-Control-Request-Method", "PUT");
 
-        $response = (new ResponseFactory)->createResponse();
+        $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware([
             "origin" => ["*"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -351,13 +351,13 @@ class CorsTest extends TestCase
 
     public function testShouldReturn200WithProperPreflightRequest()
     {
-        $request = (new ServerRequestFactory)
+        $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com")
             ->withHeader("Access-Control-Request-Headers", "Authorization")
             ->withHeader("Access-Control-Request-Method", "PUT");
 
-        $response = (new ResponseFactory)->createResponse();
+        $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware([
             "origin" => ["*"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -378,11 +378,11 @@ class CorsTest extends TestCase
 
     public function testShouldReturn200WithNoCorsHeaders()
     {
-        $request = (new ServerRequestFactory)
+        $request = (new ServerRequestFactory())
             ->createServerRequest("GET", "https://example.com/api")
             ->withHeader("Origin", "https://example.com");
 
-        $response = (new ResponseFactory)->createResponse();
+        $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware([
             "origin" => [],
             "origin.server" => "https://example.com"
@@ -400,14 +400,14 @@ class CorsTest extends TestCase
 
     public function testShouldCallAnonymousErrorFunction()
     {
-        $request = (new ServerRequestFactory)
+        $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com")
             ->withHeader("Access-Control-Request-Headers", "X-Nosuch")
             ->withHeader("Access-Control-Request-Method", "PUT");
 
-        $response = (new ResponseFactory)->createResponse();
-        $logger = new NullLogger;
+        $response = (new ResponseFactory())->createResponse();
+        $logger = new NullLogger();
         $cors = new CorsMiddleware([
             "logger" => $logger,
             "origin" => ["*"],
@@ -434,14 +434,14 @@ class CorsTest extends TestCase
 
     public function testShouldCallInvokableErrorClass()
     {
-        $request = (new ServerRequestFactory)
+        $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com")
             ->withHeader("Access-Control-Request-Headers", "X-Nosuch")
             ->withHeader("Access-Control-Request-Method", "PUT");
 
-        $response = (new ResponseFactory)->createResponse();
-        $logger = new NullLogger;
+        $response = (new ResponseFactory())->createResponse();
+        $logger = new NullLogger();
         $cors = new CorsMiddleware([
             "logger" => $logger,
             "origin" => ["*"],
@@ -450,7 +450,7 @@ class CorsTest extends TestCase
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
             "cache" => 86400,
-            "error" => new TestErrorHandler
+            "error" => new TestErrorHandler()
         ]);
 
         $next = function (Request $request, Response $response) {
@@ -465,14 +465,14 @@ class CorsTest extends TestCase
 
     public function testShouldCallArrayNotationError()
     {
-        $request = (new ServerRequestFactory)
+        $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com")
             ->withHeader("Access-Control-Request-Headers", "X-Nosuch")
             ->withHeader("Access-Control-Request-Method", "PUT");
 
-        $response = (new ResponseFactory)->createResponse();
-        $logger = new NullLogger;
+        $response = (new ResponseFactory())->createResponse();
+        $logger = new NullLogger();
         $cors = new CorsMiddleware([
             "logger" => $logger,
             "origin" => ["*"],
@@ -496,12 +496,12 @@ class CorsTest extends TestCase
 
     public function testShouldHandlePsr15()
     {
-        $request = (new ServerRequestFactory)
+        $request = (new ServerRequestFactory())
             ->createServerRequest("GET", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com");
 
         $default = function (ServerRequestInterface $request) {
-            $response = (new ResponseFactory)->createResponse();
+            $response = (new ResponseFactory())->createResponse();
             $response->getBody()->write("Success");
             return $response;
         };
