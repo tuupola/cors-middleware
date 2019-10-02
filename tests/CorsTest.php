@@ -93,7 +93,7 @@ class CorsTest extends TestCase
         $this->assertEquals("http://www.example.com", $response->getHeaderLine("Access-Control-Allow-Origin"));
         $this->assertEquals("true", $response->getHeaderLine("Access-Control-Allow-Credentials"));
         $this->assertEquals("Origin", $response->getHeaderLine("Vary"));
-        $this->assertEquals("Authorization,Etag", $response->getHeaderLine("Access-Control-Expose-Headers"));
+        $this->assertEquals("Authorization, Etag", $response->getHeaderLine("Access-Control-Expose-Headers"));
     }
 
     public function testShouldReturn401WithWrongOrigin()
@@ -522,7 +522,7 @@ class CorsTest extends TestCase
         $this->assertEquals("http://www.example.com", $response->getHeaderLine("Access-Control-Allow-Origin"));
         $this->assertEquals("true", $response->getHeaderLine("Access-Control-Allow-Credentials"));
         $this->assertEquals("Origin", $response->getHeaderLine("Vary"));
-        $this->assertEquals("Authorization,Etag", $response->getHeaderLine("Access-Control-Expose-Headers"));
+        $this->assertEquals("Authorization, Etag", $response->getHeaderLine("Access-Control-Expose-Headers"));
         $this->assertEquals("Success", $response->getBody());
     }
 }
