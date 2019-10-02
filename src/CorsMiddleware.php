@@ -38,6 +38,7 @@ namespace Tuupola\Middleware;
 use Closure;
 use Neomerx\Cors\Analyzer as CorsAnalyzer;
 use Neomerx\Cors\Contracts\AnalysisResultInterface as CorsAnalysisResultInterface;
+use Neomerx\Cors\Contracts\Constants\CorsResponseHeaders;
 use Neomerx\Cors\Strategies\Settings as CorsSettings;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -46,6 +47,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Tuupola\Http\Factory\ResponseFactory;
 use Tuupola\Middleware\DoublePassTrait;
+
 
 final class CorsMiddleware implements MiddlewareInterface
 {
@@ -114,6 +116,8 @@ final class CorsMiddleware implements MiddlewareInterface
                 /* Actual CORS request. */
                 $response = $handler->handle($request);
                 $cors_headers = $cors->getResponseHeaders();
+                $cors_headers = $this->fixHeaders($cors_headers);
+
                 foreach ($cors_headers as $header => $value) {
                     /* Diactoros errors on integer values. */
                     if (false === is_array($value)) {
@@ -181,6 +185,17 @@ final class CorsMiddleware implements MiddlewareInterface
         $settings->setPreFlightCacheMaxAge($this->options["cache"]);
 
         return $settings;
+    }
+
+    /**
+     * Edge cannot handle multiple Access-Control-Expose-Headers headers
+     */
+    private function fixHeaders(array $headers): array{
+        if (isset($headers[CorsResponseHeaders::EXPOSE_HEADERS])) {
+            $headers[CorsResponseHeaders::EXPOSE_HEADERS] =
+                implode(', ', $headers[CorsResponseHeaders::EXPOSE_HEADERS]);
+        }
+        return $headers;
     }
 
     /**
