@@ -48,7 +48,6 @@ use Psr\Log\LoggerInterface;
 use Tuupola\Http\Factory\ResponseFactory;
 use Tuupola\Middleware\DoublePassTrait;
 
-
 final class CorsMiddleware implements MiddlewareInterface
 {
     use DoublePassTrait;
