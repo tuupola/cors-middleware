@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## [1.0.1](https://github.com/tuupola/cors-middleware/compare/1.0.0...1.0.1) - unreleased
+### Changed
+- Send multiple `Access-Control-Expose-Headers` values in one header ([#40](https://github.com/tuupola/cors-middleware/issues/40), [#42](https://github.com/tuupola/cors-middleware/pull/42)).
+
 ## [1.0.0](https://github.com/tuupola/cors-middleware/compare/0.9.4...1.0.0) - 2019-06-04
 ### Changed
 - `tuupola/callable-handler:^1.0` is now minimum requirement.
