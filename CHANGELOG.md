@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## [1.1.1](https://github.com/tuupola/cors-middleware/compare/1.1.0...master) - unreleased
+### Changed
+- Concatenate `Access-Control-Expose-Headers` values with comma instead of comma and space ([#44](https://github.com/tuupola/cors-middleware/pull/44)). Edge has issues with spaces.
+
 ## [1.1.0](https://github.com/tuupola/cors-middleware/compare/1.0.0...1.1.0) - 2019-10-08
 ### Changed
 - Send multiple `Access-Control-Expose-Headers` values in one header ([#40](https://github.com/tuupola/cors-middleware/issues/40), [#42](https://github.com/tuupola/cors-middleware/pull/42)).

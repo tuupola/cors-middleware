@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
 
 Copyright (c) 2016-2019 Mika Tuupola
@@ -32,6 +30,8 @@ SOFTWARE.
  * @see       https://www.w3.org/TR/cors/
  * @license   https://www.opensource.org/licenses/mit-license.php
  */
+
+declare(strict_types=1);
 
 namespace Tuupola\Middleware;
 
@@ -193,7 +193,7 @@ final class CorsMiddleware implements MiddlewareInterface
     {
         if (isset($headers[CorsResponseHeaders::EXPOSE_HEADERS])) {
             $headers[CorsResponseHeaders::EXPOSE_HEADERS] =
-                implode(", ", $headers[CorsResponseHeaders::EXPOSE_HEADERS]);
+                implode(",", $headers[CorsResponseHeaders::EXPOSE_HEADERS]);
         }
         return $headers;
     }
