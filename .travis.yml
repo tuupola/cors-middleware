@@ -10,8 +10,6 @@ jobs:
     fast_finish: true
     include:
     - php: nightly
-      env: PREFER_LOWEST="--prefer-lowest --prefer-stable" COMPOSER_ARGS="--no-interaction --ignore-platform-reqs"
-    - php: nightly
       env: PREFER_LOWEST="" COMPOSER_ARGS="--no-interaction --ignore-platform-reqs"
     allow_failures:
         - php: nightly
