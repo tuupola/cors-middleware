@@ -39,7 +39,6 @@
         }
     },
     "require-dev": {
-        "codedungeon/phpunit-result-printer": "^0.23.2",
         "equip/dispatch": "^2.0",
         "overtrue/phplint": "^1.0",
         "phpstan/phpstan": "^0.11.15",
