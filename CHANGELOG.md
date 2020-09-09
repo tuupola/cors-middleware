@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## [1.2.0](https://github.com/tuupola/cors-middleware/compare/1.1.1...1.2.0) - unreleased
+## [1.2.0](https://github.com/tuupola/cors-middleware/compare/1.1.1...1.2.0) - 2020-09-09
 ### Added
 - Allow installing with PHP 8 ([#49](https://github.com/tuupola/cors-middleware/pull/49)).
 
