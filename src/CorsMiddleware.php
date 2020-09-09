@@ -52,9 +52,16 @@ final class CorsMiddleware implements MiddlewareInterface
 {
     use DoublePassTrait;
 
+    /**
+     * @var \Psr\Log\LoggerInterface|null
+     */
     private $logger;
+
+    /**
+     * @var mixed[]
+     */
     private $options = [
-        "origin" => "*",
+        "origin" => ["*"],
         "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
         "headers.allow" => [],
         "headers.expose" => [],
@@ -64,8 +71,12 @@ final class CorsMiddleware implements MiddlewareInterface
         "error" => null
     ];
 
-    public function __construct($options = [])
+    public function __construct(array $options = [])
     {
+        /* TODO: This only exists to for BC. */
+        if (isset($options["origin"])) {
+            $options["origin"] = (array) $options["origin"];
+        }
         /* Store passed in options overwriting any defaults. */
         $this->hydrate($options);
     }
@@ -201,13 +212,14 @@ final class CorsMiddleware implements MiddlewareInterface
     /**
      * Set allowed origin.
      */
-    private function origin($origin): void
+    private function origin(array $origin): void
     {
-        $this->options["origin"] = (array) $origin;
+        $this->options["origin"] = $origin;
     }
 
     /**
      * Set request methods to be allowed.
+     * @param callable|array $methods.
      */
     private function methods($methods): void
     {
@@ -277,7 +289,7 @@ final class CorsMiddleware implements MiddlewareInterface
     /**
      * Set the PSR-3 logger.
      */
-    private function logger(LoggerInterface $logger = null)
+    private function logger(LoggerInterface $logger = null): void
     {
         $this->logger = $logger;
     }
@@ -285,8 +297,11 @@ final class CorsMiddleware implements MiddlewareInterface
     /**
      * Call the error handler if it exists.
      */
-    private function processError(ServerRequestInterface $request, ResponseInterface $response, array $arguments = null)
-    {
+    private function processError(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        array $arguments = null
+    ): ResponseInterface {
         if (is_callable($this->options["error"])) {
             $handler_response = $this->options["error"]($request, $response, $arguments);
             if (is_a($handler_response, "\Psr\Http\Message\ResponseInterface")) {
