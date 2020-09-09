@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## [1.2.0](https://github.com/tuupola/cors-middleware/compare/1.1.1...1.2.0) - unreleased
+### Added
+- Allow installing with PHP 8 ([#49](https://github.com/tuupola/cors-middleware/pull/49)).
+
 ## [1.1.1](https://github.com/tuupola/cors-middleware/compare/1.1.0...1.1.1) - 2019-10-30
 ### Changed
 - Concatenate `Access-Control-Expose-Headers` values with comma instead of comma and space ([#44](https://github.com/tuupola/cors-middleware/pull/44)). Edge has issues with spaces.
