@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## [1.2.1](https://github.com/tuupola/cors-middleware/compare/1.2.0...3.x) - unreleased
+### Fixed
+- Bump minimum requirement of `tuupola/http-factory` to `1.0.2` . This is to avoid Composer 2 installing the broken `1.0.1` version which will also cause `psr/http-factory` to be removed. ([#50](https://github.com/tuupola/cors-middleware/pull/50))
+
 ## [1.2.0](https://github.com/tuupola/cors-middleware/compare/1.1.1...1.2.0) - 2020-09-09
 ### Added
 - Allow installing with PHP 8 ([#49](https://github.com/tuupola/cors-middleware/pull/49)).
