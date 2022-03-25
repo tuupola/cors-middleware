@@ -39,16 +39,12 @@ class SettingsTest extends TestCase
     {
         // Allow subdomain without wildcard
         $origin = 'https://www.example.com';
-        $allowedOrigins = [
-            'https://www.example.com' => true,
-        ];
+        $allowedOrigins = ['https://www.example.com' => true];
         yield [$origin, $allowedOrigins, true];
 
         // Disallow wrong subdomain
         $origin = 'https://ws.example.com';
-        $allowedOrigins = [
-            'https://www.example.com' => true,
-        ];
+        $allowedOrigins = ['https://www.example.com' => true];
         yield [$origin, $allowedOrigins, false];
 
         // Allow all
