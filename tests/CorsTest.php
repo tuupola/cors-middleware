@@ -44,7 +44,6 @@ use Tuupola\Http\Factory\UriFactory;
 
 class CorsTest extends TestCase
 {
-
     public function testShouldBeTrue()
     {
         $this->assertTrue(true);
