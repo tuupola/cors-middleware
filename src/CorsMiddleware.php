@@ -39,14 +39,13 @@ use Closure;
 use Neomerx\Cors\Analyzer as CorsAnalyzer;
 use Neomerx\Cors\Contracts\AnalysisResultInterface as CorsAnalysisResultInterface;
 use Neomerx\Cors\Contracts\Constants\CorsResponseHeaders;
-use Neomerx\Cors\Strategies\Settings as CorsSettings;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Tuupola\Http\Factory\ResponseFactory;
-use Tuupola\Middleware\DoublePassTrait;
+use Tuupola\Middleware\Settings as CorsSettings;
 
 final class CorsMiddleware implements MiddlewareInterface
 {
