@@ -44,7 +44,6 @@ use Tuupola\Http\Factory\UriFactory;
 
 class CorsTest extends TestCase
 {
-
     public function testShouldBeTrue()
     {
         $this->assertTrue(true);
@@ -66,6 +65,37 @@ class CorsTest extends TestCase
         $response = $cors($request, $response, $next);
         $this->assertEquals(200, $response->getStatusCode());
         //$this->assertEquals("", $response->getBody());
+    }
+
+    public function testShouldAcceptWildcardSettings()
+    {
+        $request = (new ServerRequestFactory())
+            ->createServerRequest("POST", "https://example.com/api")
+            ->withHeader("Origin", "https://subdomain.example.com");
+
+        $response = (new ResponseFactory())->createResponse();
+        $cors = new CorsMiddleware([
+            "origin" => [
+                '*.example.com',
+            ],
+            "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
+            "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
+            "headers.expose" => ["Authorization", "Etag"],
+            "credentials" => true,
+            "cache" => 86400,
+        ]);
+
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+            $response->getBody()->write("Foo");
+            return $response;
+        };
+
+        $response = $cors($request, $response, $next);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals("https://subdomain.example.com", $response->getHeaderLine("Access-Control-Allow-Origin"));
+        $this->assertEquals("true", $response->getHeaderLine("Access-Control-Allow-Credentials"));
+        $this->assertEquals("Origin", $response->getHeaderLine("Vary"));
+        $this->assertEquals("Authorization,Etag", $response->getHeaderLine("Access-Control-Expose-Headers"));
     }
 
     public function testShouldHaveCorsHeaders()
