@@ -105,7 +105,25 @@ Vary: Origin
 Access-Control-Expose-Headers: Etag
 ```
 
-## Other parameters
+## Parameters
+
+### Origin
+
+By default all origins are allowed. You can limit allowed origins by passing them as an array.
+
+```php
+$app->add(new Tuupola\Middleware\CorsMiddleware([
+    "origin" => ["app-1.example.com", "app-2,example.com"]
+]));
+```
+
+You can also use wildcards to define multiple origins at once. Wildcards are matched by using the [fnmatch()](https://www.php.net/manual/en/function.fnmatch.php) function.
+
+```php
+$app->add(new Tuupola\Middleware\CorsMiddleware([
+    "origin" => ["*.example.com"]
+]));
+```
 
 ### Methods
 
