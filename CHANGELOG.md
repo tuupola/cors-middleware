@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## [1.3.0](https://github.com/tuupola/cors-middleware/compare/1.2.1...1.3.0) - unreleased
+## [1.3.0](https://github.com/tuupola/cors-middleware/compare/1.2.1...1.3.0) - 2022-04-13
 ### Added
 - Add support for wildcard origins ([#56](https://github.com/tuupola/cors-middleware/pull/56)).
 
