@@ -4,7 +4,7 @@ This middleware implements [Cross-origin resource sharing](https://en.wikipedia.
 
 [![Latest Version](https://img.shields.io/packagist/v/tuupola/cors-middleware.svg?style=flat-square)](https://packagist.org/packages/tuupola/cors-middleware)
 [![Packagist](https://img.shields.io/packagist/dm/tuupola/cors-middleware.svg)](https://packagist.org/packages/tuupola/cors-middleware)
-[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Build Status](https://img.shields.io/github/workflow/status/tuupola/cors-middleware/Tests/master?style=flat-square)](https://github.com/tuupola/cors-middleware/actions)
 [![Coverage](https://img.shields.io/codecov/c/github/tuupola/cors-middleware.svg?style=flat-square)](https://codecov.io/github/tuupola/cors-middleware)
 
@@ -105,7 +105,25 @@ Vary: Origin
 Access-Control-Expose-Headers: Etag
 ```
 
-## Other parameters
+## Parameters
+
+### Origin
+
+By default all origins are allowed. You can limit allowed origins by passing them as an array.
+
+```php
+$app->add(new Tuupola\Middleware\CorsMiddleware([
+    "origin" => ["app-1.example.com", "app-2,example.com"]
+]));
+```
+
+You can also use wildcards to define multiple origins at once. Wildcards are matched by using the [fnmatch()](https://www.php.net/manual/en/function.fnmatch.php) function.
+
+```php
+$app->add(new Tuupola\Middleware\CorsMiddleware([
+    "origin" => ["*.example.com"]
+]));
+```
 
 ### Methods
 
@@ -235,4 +253,4 @@ If you discover any security related issues, please email tuupola@appelsiini.net
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
