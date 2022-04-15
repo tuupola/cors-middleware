@@ -113,7 +113,7 @@ By default all origins are allowed. You can limit allowed origins by passing the
 
 ```php
 $app->add(new Tuupola\Middleware\CorsMiddleware([
-    "origin" => ["app-1.example.com", "app-2,example.com"]
+    "origin" => ["app-1.example.com", "app-2.example.com"]
 ]));
 ```
 
