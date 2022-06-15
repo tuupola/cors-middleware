@@ -22,12 +22,18 @@
     },
     "require": {
         "php": "^7.1|^8.0",
-        "neomerx/cors-psr7": "dev-master#14a45be5d1722f8092a817236428d6f4cb3851d8",
+        "neomerx/cors-psr7": "dev-update-psr-log",
         "psr/http-message": "^1.0.1",
         "psr/http-server-middleware": "^1.0",
         "tuupola/callable-handler": "^1.0",
         "tuupola/http-factory": "^1.0.2"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/sankaest/cors-psr7"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Tuupola\\Middleware\\": "src"
