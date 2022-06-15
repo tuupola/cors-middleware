@@ -22,7 +22,7 @@
     },
     "require": {
         "php": "^7.1|^8.0",
-        "mehrkanal/cors-psr7": "dev-master",
+        "neomerx/cors-psr7": "dev-master#14a45be5d1722f8092a817236428d6f4cb3851d8",
         "psr/http-message": "^1.0.1",
         "psr/http-server-middleware": "^1.0",
         "tuupola/callable-handler": "^1.0",
