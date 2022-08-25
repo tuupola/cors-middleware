@@ -42,7 +42,7 @@ class TestErrorHandler
         ServerRequestInterface $request,
         ResponseInterface $response,
         array $arguments
-    ) {
+    ): ResponseInterface {
         $response->getBody()->write(self::class);
         return $response->withStatus(402);
     }
@@ -51,7 +51,7 @@ class TestErrorHandler
         ServerRequestInterface $request,
         ResponseInterface $response,
         array $arguments
-    ) {
+    ): ResponseInterface {
         $response->getBody()->write(self::class);
         return $response->withStatus(418);
     }
