@@ -28,17 +28,26 @@ declare(strict_types=1);
 
 namespace Tuupola\Middleware;
 
-use Neomerx\Cors\Contracts\Http\ParsedUrlInterface;
 use Neomerx\Cors\Strategies\Settings as BaseSettings;
 
 class Settings extends BaseSettings
 {
-    public function isRequestOriginAllowed(ParsedUrlInterface $requestOrigin): bool
+    /** @var array<string> */
+    private $allowedOrigins = [];
+
+    public function setAllowedOrigins(array $origins): BaseSettings
+    {
+        $this->allowedOrigins = $origins;
+
+        return parent::setAllowedOrigins($origins);
+    }
+
+    public function isRequestOriginAllowed(string $requestOrigin): bool
     {
         $isAllowed = parent::isRequestOriginAllowed($requestOrigin);
 
         if (!$isAllowed) {
-            $isAllowed = $this->wildcardOriginAllowed($requestOrigin->getOrigin());
+            $isAllowed = $this->wildcardOriginAllowed($requestOrigin);
         }
 
         return $isAllowed;
@@ -46,7 +55,7 @@ class Settings extends BaseSettings
 
     private function wildcardOriginAllowed(string $origin): bool
     {
-        foreach ($this->settings[self::KEY_ALLOWED_ORIGINS] as $allowedOrigin => $value) {
+        foreach ($this->allowedOrigins as $allowedOrigin) {
             if (fnmatch($allowedOrigin, $origin)) {
                 return true;
             }

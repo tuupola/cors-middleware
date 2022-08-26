@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace Tuupola\Middleware;
 
-use Neomerx\Cors\Http\ParsedUrl;
+use Generator;
 use PHPUnit\Framework\TestCase;
 
 class SettingsTest extends TestCase
@@ -47,73 +47,47 @@ class SettingsTest extends TestCase
     /**
      * @dataProvider wildcardOriginDataProvider
      */
-    public function testIsRequestOriginAllowed(string $origin, array $allowedOrigins, bool $expected): void
+    public function testIsRequestOriginAllowed(string $origin, string $allowedOrigins, bool $expected): void
     {
-        $requestOriginMock = $this->createMock(ParsedUrl::class);
-        $requestOriginMock->method("getOrigin")
-            ->willReturn($origin);
-
-        $this->testObject->setRequestAllowedOrigins($allowedOrigins);
-        $result = $this->testObject->isRequestOriginAllowed($requestOriginMock);
+        $this->testObject->setAllowedOrigins([$allowedOrigins]);
+        $result = $this->testObject->isRequestOriginAllowed($origin);
 
         $this->assertSame($expected, $result);
     }
 
-    public function wildcardOriginDataProvider(): iterable
+    public function wildcardOriginDataProvider(): Generator
     {
         // Allow subdomain without wildcard
-        $origin = "https://www.example.com";
-        $allowedOrigins = ["https://www.example.com" => true];
-        yield [$origin, $allowedOrigins, true];
+        yield ["https://www.example.com", "https://www.example.com", true];
 
         // Disallow wrong subdomain
-        $origin = "https://ws.example.com";
-        $allowedOrigins = ["https://www.example.com" => true];
-        yield [$origin, $allowedOrigins, false];
+        yield ["https://ws.example.com", "https://www.example.com", false];
 
         // Allow all
-        $origin = "https://ws.example.com";
-        $allowedOrigins = ["*" => true];
-        yield [$origin, $allowedOrigins, true];
+        yield ["https://ws.example.com", "*", true];
 
         // Allow subdomain wildcard
-        $origin = "https://ws.example.com";
-        $allowedOrigins = ["https://*.example.com" => true];
-        yield [$origin, $allowedOrigins, true];
+        yield ["https://ws.example.com", "https://*.example.com", true];
 
         // Allow without specifying protocol
-        $origin = "https://ws.example.com";
-        $allowedOrigins = ["*.example.com" => true];
-        yield [$origin, $allowedOrigins, true];
+        yield ["https://ws.example.com", "*.example.com", true];
 
         // Allow double subdomain for wildcard
-        $origin = "https://a.b.example.com";
-        $allowedOrigins = ["*.example.com" => true];
-        yield [$origin, $allowedOrigins, true];
+        yield ["https://a.b.example.com", "*.example.com", true];
 
         // Disallow for incorrect domain wildcard
-        $origin = "https://a.example.com.evil.com";
-        $allowedOrigins = ["*.example.com" => true];
-        yield [$origin, $allowedOrigins, false];
+        yield ["https://a.example.com.evil.com", "*.example.com", false];
 
         // Allow subdomain in the middle
-        $origin = "a.b.example.com";
-        $allowedOrigins = ["a.*.example.com" => true];
-        yield [$origin, $allowedOrigins, true];
+        yield ["a.b.example.com", "a.*.example.com", true];
 
         // Disallow wrong subdomain
-        $origin = "b.bc.example.com";
-        $allowedOrigins = ["a.*.example.com" => true];
-        yield [$origin, $allowedOrigins, false];
+        yield ["b.bc.example.com", "a.*.example.com", false];
 
         // Correctly handle dots
-        $origin = "exampleXcom";
-        $allowedOrigins = ["example.com" => true];
-        yield [$origin, $allowedOrigins, false];
+        yield ["exampleXcom", "example.com", false];
 
         // Allow subdomain and domain with one rule
-        $origin = "test.example.com";
-        $allowedOrigins = ["*example*" => true];
-        yield [$origin, $allowedOrigins, true];
+        yield ["test.example.com", "*example*", true];
     }
 }
