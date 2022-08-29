@@ -47,17 +47,39 @@ use Psr\Log\LoggerInterface;
 use Tuupola\Http\Factory\ResponseFactory;
 use Tuupola\Middleware\Settings as CorsSettings;
 
+/**
+ * @template TSanitizedOptions of array{
+ *  origin?: array<string>,
+ *  "headers.allow"?: array<string>,
+ *  "headers.expose"?: array<string>,
+ *  credentials?: bool,
+ *  "origin.server"?: null|string|array<string>,
+ *  cache?: int,
+ *  error?: null|callable,
+ *  logger?: null|LoggerInterface
+ * }
+ */
 final class CorsMiddleware implements MiddlewareInterface
 {
     use DoublePassTrait;
 
     /**
-     * @var \Psr\Log\LoggerInterface|null
+     * @var LoggerInterface|null
      */
     private $logger;
 
     /**
-     * @var mixed[]
+     * @var array{
+     *  origin: array<string>,
+     *  methods: array<string>|callable|null,
+     *  "headers.allow": array<string>,
+     *  "headers.expose": array<string>,
+     *  credentials: bool,
+     *  "origin.server": null|string|array<string>,
+     *  cache: int,
+     *  error: null|callable,
+     *  logger: null|LoggerInterface
+     * }
      */
     private $options = [
         "origin" => ["*"],
@@ -67,15 +89,30 @@ final class CorsMiddleware implements MiddlewareInterface
         "credentials" => false,
         "origin.server" => null,
         "cache" => 0,
-        "error" => null
+        "error" => null,
+        "logger" => null,
     ];
 
+    /**
+     * @param array{
+     *  origin?: string,
+     *  "headers.allow"?: array<string>,
+     *  "headers.expose"?: array<string>,
+     *  credentials?: bool,
+     *  "origin.server"?: null|string|array<string>,
+     *  cache?: int,
+     *  error?: null|callable,
+     *  logger?: null|LoggerInterface
+     * } $options
+     */
     public function __construct(array $options = [])
     {
         /* TODO: This only exists to for BC. */
         if (isset($options["origin"])) {
             $options["origin"] = (array) $options["origin"];
         }
+
+        /** @var TSanitizedOptions $options */
         /* Store passed in options overwriting any defaults. */
         $this->hydrate($options);
     }
@@ -88,7 +125,7 @@ final class CorsMiddleware implements MiddlewareInterface
         $response = (new ResponseFactory())->createResponse();
 
         $analyzer = CorsAnalyzer::instance($this->buildSettings($request, $response));
-        if ($this->logger) {
+        if ($this->logger !== null) {
             $analyzer->setLogger($this->logger);
         }
         $cors = $analyzer->analyze($request);
@@ -140,6 +177,8 @@ final class CorsMiddleware implements MiddlewareInterface
 
     /**
      * Hydrate all options from the given array.
+     *
+     * @param TSanitizedOptions $data
      */
     private function hydrate(array $data = []): void
     {
@@ -154,7 +193,12 @@ final class CorsMiddleware implements MiddlewareInterface
                 /* Try to use setter */
                 call_user_func($callable, $value);
             } else {
-                /* Or fallback to setting option directly */
+                /**
+                 * Or fallback to setting option directly
+                 * Shouldn't be in use as every option is covered by setters
+                 *
+                 * @phpstan-ignore-next-line
+                 */
                 $this->options[$key] = $value;
             }
         }
@@ -167,19 +211,21 @@ final class CorsMiddleware implements MiddlewareInterface
     {
         $settings = new CorsSettings();
 
-        $origin = array_fill_keys((array) $this->options["origin"], true);
+        $origin = array_fill_keys($this->options["origin"], true);
         $settings->setRequestAllowedOrigins($origin);
 
         if (is_callable($this->options["methods"])) {
             $methods = (array) $this->options["methods"]($request, $response);
         } else {
-            $methods = $this->options["methods"];
+            $methods = (array) $this->options["methods"];
         }
         $methods = array_fill_keys($methods, true);
         $settings->setRequestAllowedMethods($methods);
 
         $headers = array_fill_keys($this->options["headers.allow"], true);
-        $headers = array_change_key_case($headers, CASE_LOWER);
+
+        /* transform all headers to lowercase */
+        $headers = array_change_key_case($headers);
         $settings->setRequestAllowedHeaders($headers);
 
         $headers = array_fill_keys($this->options["headers.expose"], true);
@@ -303,7 +349,7 @@ final class CorsMiddleware implements MiddlewareInterface
     ): ResponseInterface {
         if (is_callable($this->options["error"])) {
             $handler_response = $this->options["error"]($request, $response, $arguments);
-            if (is_a($handler_response, "\Psr\Http\Message\ResponseInterface")) {
+            if (is_a($handler_response, ResponseInterface::class)) {
                 return $handler_response;
             }
         }

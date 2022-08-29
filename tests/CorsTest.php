@@ -35,21 +35,20 @@ namespace Tuupola\Middleware;
 
 use Equip\Dispatch\MiddlewareCollection;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\NullLogger;
 use Tuupola\Http\Factory\ResponseFactory;
 use Tuupola\Http\Factory\ServerRequestFactory;
-use Tuupola\Http\Factory\UriFactory;
 
 class CorsTest extends TestCase
 {
-    public function testShouldBeTrue()
+    public function testShouldBeTrue(): void
     {
         $this->assertTrue(true);
     }
 
-    public function testShouldReturn200ByDefault()
+    public function testShouldReturn200ByDefault(): void
     {
         $request = (new ServerRequestFactory())
             ->createServerRequest("GET", "https://example.com/api");
@@ -67,7 +66,7 @@ class CorsTest extends TestCase
         //$this->assertEquals("", $response->getBody());
     }
 
-    public function testShouldAcceptWildcardSettings()
+    public function testShouldAcceptWildcardSettings(): void
     {
         $request = (new ServerRequestFactory())
             ->createServerRequest("POST", "https://example.com/api")
@@ -98,7 +97,7 @@ class CorsTest extends TestCase
         $this->assertEquals("Authorization,Etag", $response->getHeaderLine("Access-Control-Expose-Headers"));
     }
 
-    public function testShouldHaveCorsHeaders()
+    public function testShouldHaveCorsHeaders(): void
     {
         $request = (new ServerRequestFactory())
             ->createServerRequest("GET", "https://example.com/api")
@@ -126,7 +125,7 @@ class CorsTest extends TestCase
         $this->assertEquals("Authorization,Etag", $response->getHeaderLine("Access-Control-Expose-Headers"));
     }
 
-    public function testShouldReturn401WithWrongOrigin()
+    public function testShouldReturn401WithWrongOrigin(): void
     {
         $request = (new ServerRequestFactory())
             ->createServerRequest("GET", "https://example.com/api")
@@ -151,7 +150,7 @@ class CorsTest extends TestCase
         $this->assertEquals(401, $response->getStatusCode());
     }
 
-    public function testShouldReturn200WithCorrectOrigin()
+    public function testShouldReturn200WithCorrectOrigin(): void
     {
         $request = (new ServerRequestFactory())
             ->createServerRequest("GET", "https://example.com/api")
@@ -176,7 +175,7 @@ class CorsTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testShouldReturn401WithWrongMethod()
+    public function testShouldReturn401WithWrongMethod(): void
     {
         $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
@@ -194,7 +193,7 @@ class CorsTest extends TestCase
             "cache" => 86400
         ]);
 
-        $next = function (Request $request, Response $response) {
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -204,7 +203,7 @@ class CorsTest extends TestCase
         $this->assertEquals(401, $response->getStatusCode());
     }
 
-    public function testShouldReturn401WithWrongMethodFromFunction()
+    public function testShouldReturn401WithWrongMethodFromFunction(): void
     {
         $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
@@ -224,7 +223,7 @@ class CorsTest extends TestCase
             "cache" => 86400
         ]);
 
-        $next = function (Request $request, Response $response) {
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -234,7 +233,7 @@ class CorsTest extends TestCase
         $this->assertEquals(401, $response->getStatusCode());
     }
 
-    public function testShouldReturn401WithWrongMethodFromInvokableClass()
+    public function testShouldReturn401WithWrongMethodFromInvokableClass(): void
     {
         $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
@@ -252,7 +251,7 @@ class CorsTest extends TestCase
             "cache" => 86400
         ]);
 
-        $next = function (Request $request, Response $response) {
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -262,8 +261,7 @@ class CorsTest extends TestCase
         $this->assertEquals(401, $response->getStatusCode());
     }
 
-
-    public function testShouldReturn200WithCorrectMethodFromFunction()
+    public function testShouldReturn200WithCorrectMethodFromFunction(): void
     {
         $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
@@ -283,7 +281,7 @@ class CorsTest extends TestCase
             "cache" => 86400
         ]);
 
-        $next = function (Request $request, Response $response) {
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -293,7 +291,7 @@ class CorsTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testShouldReturn200WithCorrectMethodFromInvokableClass()
+    public function testShouldReturn200WithCorrectMethodFromInvokableClass(): void
     {
         $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
@@ -311,7 +309,7 @@ class CorsTest extends TestCase
             "cache" => 86400
         ]);
 
-        $next = function (Request $request, Response $response) {
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -321,7 +319,7 @@ class CorsTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testShouldReturn200WithCorrectMethodUsingArrayNotation()
+    public function testShouldReturn200WithCorrectMethodUsingArrayNotation(): void
     {
         $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
@@ -339,7 +337,7 @@ class CorsTest extends TestCase
             "cache" => 86400
         ]);
 
-        $next = function (Request $request, Response $response) {
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -349,7 +347,7 @@ class CorsTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testShouldReturn401WithWrongHeader()
+    public function testShouldReturn401WithWrongHeader(): void
     {
         $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
@@ -370,7 +368,7 @@ class CorsTest extends TestCase
             }
         ]);
 
-        $next = function (Request $request, Response $response) {
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -379,7 +377,7 @@ class CorsTest extends TestCase
         $this->assertEquals(401, $response->getStatusCode());
     }
 
-    public function testShouldReturn200WithProperPreflightRequest()
+    public function testShouldReturn200WithProperPreflightRequest(): void
     {
         $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
@@ -397,7 +395,7 @@ class CorsTest extends TestCase
             "cache" => 86400
         ]);
 
-        $next = function (Request $request, Response $response) {
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -406,7 +404,7 @@ class CorsTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testShouldReturn200WithNoCorsHeaders()
+    public function testShouldReturn200WithNoCorsHeaders(): void
     {
         $request = (new ServerRequestFactory())
             ->createServerRequest("GET", "https://example.com/api")
@@ -428,7 +426,7 @@ class CorsTest extends TestCase
         $this->assertEmpty($response->getHeaderLine("Access-Control-Allow-Origin"));
     }
 
-    public function testShouldCallAnonymousErrorFunction()
+    public function testShouldCallAnonymousErrorFunction(): void
     {
         $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
@@ -452,7 +450,7 @@ class CorsTest extends TestCase
             }
         ]);
 
-        $next = function (Request $request, Response $response) {
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -462,7 +460,7 @@ class CorsTest extends TestCase
         $this->assertEquals("Error", $response->getBody());
     }
 
-    public function testShouldCallInvokableErrorClass()
+    public function testShouldCallInvokableErrorClass(): void
     {
         $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
@@ -483,7 +481,7 @@ class CorsTest extends TestCase
             "error" => new TestErrorHandler()
         ]);
 
-        $next = function (Request $request, Response $response) {
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -493,7 +491,7 @@ class CorsTest extends TestCase
         $this->assertEquals(TestErrorHandler::class, $response->getBody());
     }
 
-    public function testShouldCallArrayNotationError()
+    public function testShouldCallArrayNotationError(): void
     {
         $request = (new ServerRequestFactory())
             ->createServerRequest("OPTIONS", "https://example.com/api")
@@ -514,7 +512,7 @@ class CorsTest extends TestCase
             "error" => [TestErrorHandler::class, "error"]
         ]);
 
-        $next = function (Request $request, Response $response) {
+        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -524,7 +522,7 @@ class CorsTest extends TestCase
         $this->assertEquals(TestErrorHandler::class, $response->getBody());
     }
 
-    public function testShouldHandlePsr15()
+    public function testShouldHandlePsr15(): void
     {
         $request = (new ServerRequestFactory())
             ->createServerRequest("GET", "https://example.com/api")
