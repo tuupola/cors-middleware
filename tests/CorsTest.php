@@ -56,7 +56,7 @@ class CorsTest extends TestCase
         $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware();
 
-        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+        $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -84,7 +84,7 @@ class CorsTest extends TestCase
             "cache" => 86400,
         ]);
 
-        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+        $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -113,7 +113,7 @@ class CorsTest extends TestCase
             "cache" => 86400
         ]);
 
-        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+        $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -141,7 +141,7 @@ class CorsTest extends TestCase
             "cache" => 86400
         ]);
 
-        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+        $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -166,7 +166,7 @@ class CorsTest extends TestCase
             "cache" => 86400
         ]);
 
-        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+        $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -193,7 +193,7 @@ class CorsTest extends TestCase
             "cache" => 86400
         ]);
 
-        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+        $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -223,7 +223,7 @@ class CorsTest extends TestCase
             "cache" => 86400
         ]);
 
-        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+        $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -251,7 +251,7 @@ class CorsTest extends TestCase
             "cache" => 86400
         ]);
 
-        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+        $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -281,7 +281,7 @@ class CorsTest extends TestCase
             "cache" => 86400
         ]);
 
-        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+        $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -309,7 +309,7 @@ class CorsTest extends TestCase
             "cache" => 86400
         ]);
 
-        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+        $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -330,14 +330,16 @@ class CorsTest extends TestCase
         $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware([
             "origin" => ["*"],
-            "methods" => [TestMethodsHandler::class, "methods"],
+            "methods" => function (ServerRequestInterface $request) {
+                return TestMethodsHandler::methods($request);
+            },
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
             "cache" => 86400
         ]);
 
-        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+        $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -368,7 +370,7 @@ class CorsTest extends TestCase
             }
         ]);
 
-        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+        $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -395,7 +397,7 @@ class CorsTest extends TestCase
             "cache" => 86400
         ]);
 
-        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+        $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -416,7 +418,7 @@ class CorsTest extends TestCase
             "origin.server" => "https://example.com"
         ]);
 
-        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+        $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -424,6 +426,46 @@ class CorsTest extends TestCase
         $response = $cors($request, $response, $next);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEmpty($response->getHeaderLine("Access-Control-Allow-Origin"));
+    }
+
+    public function testAnonymousMethodsFunctionBindsToMiddlewareInstance(): void
+    {
+        $request = (new ServerRequestFactory())
+            ->createServerRequest("OPTIONS", "https://example.com/api")
+            ->withHeader("Origin", "http://www.example.com")
+            ->withHeader("Access-Control-Request-Headers", "X-Nosuch")
+            ->withHeader("Access-Control-Request-Method", "PUT");
+
+        $interceptedClassName = '';
+
+        $response = (new ResponseFactory())->createResponse();
+        $logger = new NullLogger();
+        $cors = new CorsMiddleware([
+            "logger" => $logger,
+            "origin" => ["*"],
+            "methods" => function () use (&$interceptedClassName) {
+                $interceptedClassName = get_class($this);
+
+                return ['GET'];
+            },
+            "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
+            "headers.expose" => ["Authorization", "Etag"],
+            "credentials" => true,
+            "cache" => 86400
+        ]);
+
+        $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
+            $response->getBody()->write("Foo");
+            return $response;
+        };
+
+        $response = $cors($request, $response, $next);
+
+        $this->assertSame(
+            CorsMiddleware::class,
+            $interceptedClassName
+        );
+        $this->assertEquals(401, $response->getStatusCode());
     }
 
     public function testShouldCallAnonymousErrorFunction(): void
@@ -450,7 +492,7 @@ class CorsTest extends TestCase
             }
         ]);
 
-        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+        $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -481,7 +523,7 @@ class CorsTest extends TestCase
             "error" => new TestErrorHandler()
         ]);
 
-        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+        $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -509,10 +551,16 @@ class CorsTest extends TestCase
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
             "cache" => 86400,
-            "error" => [TestErrorHandler::class, "error"]
+            "error" => function (
+                ServerRequestInterface $request,
+                ResponseInterface $response,
+                array $arguments
+            ): ResponseInterface {
+                return TestErrorHandler::error($request, $response, $arguments);
+            }
         ]);
 
-        $next = function (ServerRequestInterface $request, ResponseInterface $response) {
+        $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
             $response->getBody()->write("Foo");
             return $response;
         };
@@ -528,7 +576,7 @@ class CorsTest extends TestCase
             ->createServerRequest("GET", "https://example.com/api")
             ->withHeader("Origin", "http://www.example.com");
 
-        $default = function (ServerRequestInterface $request) {
+        $default = static function (ServerRequestInterface $request) {
             $response = (new ResponseFactory())->createResponse();
             $response->getBody()->write("Success");
             return $response;
