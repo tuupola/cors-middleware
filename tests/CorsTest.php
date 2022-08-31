@@ -445,7 +445,7 @@ class CorsTest extends TestCase
             "credentials" => true,
             "cache" => 86400,
             "error" => function ($request, $response, $arguments) {
-                $response->getBody()->write("Error");
+                $response->getBody()->write($this::class);
                 return $response;
             }
         ]);
@@ -457,7 +457,7 @@ class CorsTest extends TestCase
 
         $response = $cors($request, $response, $next);
         $this->assertEquals(401, $response->getStatusCode());
-        $this->assertEquals("Error", $response->getBody());
+        $this->assertEquals($cors::class, $response->getBody());
     }
 
     public function testShouldCallInvokableErrorClass(): void
