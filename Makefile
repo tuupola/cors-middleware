@@ -16,7 +16,7 @@ vendor: $(wildcard composer.lock)
 	composer install --prefer-dist
 
 lint: vendor
-	vendor/bin/phplint . --exclude=vendor/
+	#vendor/bin/phplint . --exclude=vendor/
 	vendor/bin/phpcs -p --standard=PSR12 --extensions=php --encoding=utf-8 --ignore=*/vendor/*,*/benchmarks/* .
 
 unit: vendor
