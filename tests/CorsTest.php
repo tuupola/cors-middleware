@@ -457,7 +457,7 @@ class CorsTest extends TestCase
 
         $response = $cors($request, $response, $next);
         $this->assertEquals(401, $response->getStatusCode());
-        $this->assertEquals($cors::class, $response->getBody());
+        $this->assertEquals(get_class($cors), $response->getBody());
     }
 
     public function testShouldCallInvokableErrorClass(): void
