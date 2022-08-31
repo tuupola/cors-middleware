@@ -445,7 +445,7 @@ class CorsTest extends TestCase
             "credentials" => true,
             "cache" => 86400,
             "error" => function ($request, $response, $arguments) {
-                $response->getBody()->write($this::class);
+                $response->getBody()->write(get_class($this));
                 return $response;
             }
         ]);
