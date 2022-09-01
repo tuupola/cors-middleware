@@ -293,8 +293,8 @@ final class CorsMiddleware implements MiddlewareInterface
     {
         if (isset($headers[CorsResponseHeaders::EXPOSE_HEADERS])) {
             $headers[CorsResponseHeaders::EXPOSE_HEADERS] = str_replace(
-                ', ',
-                ',',
+                ' ',
+                '',
                 $headers[CorsResponseHeaders::EXPOSE_HEADERS]
             );
         }
