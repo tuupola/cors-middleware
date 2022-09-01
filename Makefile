@@ -3,13 +3,15 @@
 help:
 	@echo ""
 	@echo "Available tasks:"
-	@echo "    test    Run all tests and generate coverage"
-	@echo "    watch   Run all tests and coverage when a source file is upaded"
-	@echo "    lint    Run only linter and code style checker"
-	@echo "    unit    Run unit tests and generate coverage"
-	@echo "    unit    Run static analysis"
-	@echo "    vendor  Install dependencies"
-	@echo "    clean   Remove vendor and composer.lock"
+	@echo "    test            Run all tests and generate coverage"
+	@echo "    watch           Run all tests and coverage when a source file is upaded"
+	@echo "    lint            Run only linter and code style checker"
+	@echo "    unit            Run unit tests and generate coverage"
+	@echo "    rector-dry-run  Run rector code migrations and show the proposed changes"
+	@echo "    rector          Run rector code migrations and apply the proposed changes"
+	@echo "    unit            Run static analysis"
+	@echo "    vendor          Install dependencies"
+	@echo "    clean           Remove vendor and composer.lock"
 	@echo ""
 
 vendor: $(wildcard composer.lock)
@@ -25,6 +27,12 @@ unit: vendor
 static: vendor
 	vendor/bin/phpstan analyse src --level max
 
+rector-dry-run: vendor
+	vendor/bin/rector process --dry-run
+
+rector: vendor
+	vendor/bin/rector process
+
 watch: vendor
 	find . -name "*.php" -not -path "./vendor/*" -o -name "*.json" -not -path "./vendor/*" | entr -c make test
 
@@ -36,4 +44,4 @@ clean:
 	rm .phplint-cache
 	rm -rf report
 
-.PHONY: help lint unit watch test clean
+.PHONY: help lint unit watch test clean rector rector-dry-run

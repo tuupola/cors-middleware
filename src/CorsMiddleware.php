@@ -128,6 +128,7 @@ final class CorsMiddleware implements MiddlewareInterface
         if ($this->logger !== null) {
             $analyzer->setLogger($this->logger);
         }
+
         $cors = $analyzer->analyze($request);
 
         switch ($cors->getRequestType()) {
@@ -150,11 +151,13 @@ final class CorsMiddleware implements MiddlewareInterface
                 $cors_headers = $cors->getResponseHeaders();
                 foreach ($cors_headers as $header => $value) {
                     /* Diactoros errors on integer values. */
-                    if (false === is_array($value)) {
+                    if (!is_array($value)) {
                         $value = (string)$value;
                     }
+
                     $response = $response->withHeader($header, $value);
                 }
+
                 return $response->withStatus(200);
             case CorsAnalysisResultInterface::TYPE_REQUEST_OUT_OF_CORS_SCOPE:
                 return $handler->handle($request);
@@ -166,11 +169,13 @@ final class CorsMiddleware implements MiddlewareInterface
 
                 foreach ($cors_headers as $header => $value) {
                     /* Diactoros errors on integer values. */
-                    if (false === is_array($value)) {
+                    if (!is_array($value)) {
                         $value = (string)$value;
                     }
+
                     $response = $response->withHeader($header, $value);
                 }
+
                 return $response;
         }
     }
@@ -219,6 +224,7 @@ final class CorsMiddleware implements MiddlewareInterface
         } else {
             $methods = (array) $this->options["methods"];
         }
+
         $methods = array_fill_keys($methods, true);
         $settings->setRequestAllowedMethods($methods);
 
@@ -226,6 +232,7 @@ final class CorsMiddleware implements MiddlewareInterface
 
         /* transform all headers to lowercase */
         $headers = array_change_key_case($headers);
+
         $settings->setRequestAllowedHeaders($headers);
 
         $headers = array_fill_keys($this->options["headers.expose"], true);
@@ -251,6 +258,7 @@ final class CorsMiddleware implements MiddlewareInterface
             $headers[CorsResponseHeaders::EXPOSE_HEADERS] =
                 implode(",", $headers[CorsResponseHeaders::EXPOSE_HEADERS]);
         }
+
         return $headers;
     }
 
@@ -353,6 +361,7 @@ final class CorsMiddleware implements MiddlewareInterface
                 return $handler_response;
             }
         }
+
         return $response;
     }
 }
