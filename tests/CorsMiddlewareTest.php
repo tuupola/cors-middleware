@@ -41,7 +41,7 @@ use Psr\Log\NullLogger;
 use Tuupola\Http\Factory\ResponseFactory;
 use Tuupola\Http\Factory\ServerRequestFactory;
 
-class CorsTest extends TestCase
+class CorsMiddlewareTest extends TestCase
 {
     public function testShouldBeTrue(): void
     {
@@ -63,7 +63,6 @@ class CorsTest extends TestCase
 
         $response = $cors($request, $response, $next);
         $this->assertEquals(200, $response->getStatusCode());
-        //$this->assertEquals("", $response->getBody());
     }
 
     public function testShouldAcceptWildcardSettings(): void

@@ -39,10 +39,10 @@ use Closure;
 use Neomerx\Cors\Analyzer as CorsAnalyzer;
 use Neomerx\Cors\Contracts\AnalysisResultInterface as CorsAnalysisResultInterface;
 use Neomerx\Cors\Contracts\Constants\CorsResponseHeaders;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Tuupola\Http\Factory\ResponseFactory;
 use Tuupola\Middleware\Settings as CorsSettings;
@@ -56,16 +56,20 @@ use Tuupola\Middleware\Settings as CorsSettings;
  *  "origin.server"?: null|string|array<string>,
  *  cache?: int,
  *  error?: null|callable,
- *  logger?: null|LoggerInterface
+ *  logger?: null|LoggerInterface,
  * }
  */
 final class CorsMiddleware implements MiddlewareInterface
 {
     use DoublePassTrait;
 
-    /**
-     * @var LoggerInterface|null
-     */
+    /** @var int */
+    private const PORT_HTTP = 80;
+
+    /** @var int */
+    private const PORT_HTTPS = 443;
+
+    /** @var LoggerInterface|null */
     private $logger;
 
     /**
@@ -78,7 +82,7 @@ final class CorsMiddleware implements MiddlewareInterface
      *  "origin.server": null|string|array<string>,
      *  cache: int,
      *  error: null|callable,
-     *  logger: null|LoggerInterface
+     *  logger: null|LoggerInterface,
      * }
      */
     private $options = [
@@ -102,7 +106,7 @@ final class CorsMiddleware implements MiddlewareInterface
      *  "origin.server"?: null|string|array<string>,
      *  cache?: int,
      *  error?: null|callable,
-     *  logger?: null|LoggerInterface
+     *  logger?: null|LoggerInterface,
      * } $options
      */
     public function __construct(array $options = [])
@@ -216,8 +220,15 @@ final class CorsMiddleware implements MiddlewareInterface
     {
         $settings = new CorsSettings();
 
-        $origin = array_fill_keys($this->options["origin"], true);
-        $settings->setRequestAllowedOrigins($origin);
+        $serverOrigin = $this->determineServerOrigin();
+
+        $settings->init(
+            $serverOrigin['scheme'],
+            $serverOrigin['host'],
+            $serverOrigin['port']
+        );
+
+        $settings->setAllowedOrigins($this->options["origin"]);
 
         if (is_callable($this->options["methods"])) {
             $methods = (array) $this->options["methods"]($request, $response);
@@ -225,23 +236,17 @@ final class CorsMiddleware implements MiddlewareInterface
             $methods = (array) $this->options["methods"];
         }
 
-        $methods = array_fill_keys($methods, true);
-        $settings->setRequestAllowedMethods($methods);
-
-        $headers = array_fill_keys($this->options["headers.allow"], true);
+        $settings->setAllowedMethods($methods);
 
         /* transform all headers to lowercase */
-        $headers = array_change_key_case($headers);
+        $headers = array_change_key_case($this->options["headers.allow"]);
 
-        $settings->setRequestAllowedHeaders($headers);
+        $settings->setAllowedHeaders($headers);
 
-        $headers = array_fill_keys($this->options["headers.expose"], true);
-        $settings->setResponseExposedHeaders($headers);
+        $settings->setExposedHeaders($this->options["headers.expose"]);
 
-        $settings->setRequestCredentialsSupported($this->options["credentials"]);
-
-        if (is_string($this->options["origin.server"])) {
-            $settings->setServerOrigin($this->options["origin.server"]);
+        if ($this->options["credentials"]) {
+            $settings->setCredentialsSupported();
         }
 
         $settings->setPreFlightCacheMaxAge($this->options["cache"]);
@@ -250,13 +255,48 @@ final class CorsMiddleware implements MiddlewareInterface
     }
 
     /**
-     * Edge cannot handle multiple Access-Control-Expose-Headers headers
+     * Try to determine the server origin uri fragments
+     *
+     * @return array{scheme: string, host: string, port: int}
+     */
+    private function determineServerOrigin(): array
+    {
+        // set some default
+        $url = [
+            'scheme' => 'https',
+            'host' => '',
+            'port' => self::PORT_HTTPS,
+        ];
+
+        // load details from server origin
+        if (is_string($this->options["origin.server"])) {
+            /** @var false|array{scheme: string, host: string, port?: int} $url_chunks */
+            $url_chunks = parse_url($this->options["origin.server"]);
+            if ($url_chunks !== false) {
+                $url = $url_chunks;
+            }
+
+            if (!array_key_exists('port', $url)) {
+                $url['port'] = $url['scheme'] === 'https' ? self::PORT_HTTPS : self::PORT_HTTP;
+            }
+        }
+
+        return $url;
+    }
+
+    /**
+     * Edge cannot handle Access-Control-Expose-Headers having a trailing whitespace after the comma
+     *
+     * @see https://github.com/tuupola/cors-middleware/issues/40
      */
     private function fixHeaders(array $headers): array
     {
         if (isset($headers[CorsResponseHeaders::EXPOSE_HEADERS])) {
-            $headers[CorsResponseHeaders::EXPOSE_HEADERS] =
-                implode(",", $headers[CorsResponseHeaders::EXPOSE_HEADERS]);
+            $headers[CorsResponseHeaders::EXPOSE_HEADERS] = str_replace(
+                ' ',
+                '',
+                $headers[CorsResponseHeaders::EXPOSE_HEADERS]
+            );
         }
 
         return $headers;
