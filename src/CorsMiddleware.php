@@ -223,9 +223,9 @@ final class CorsMiddleware implements MiddlewareInterface
         $serverOrigin = $this->determineServerOrigin();
 
         $settings->init(
-            $serverOrigin['scheme'],
-            $serverOrigin['host'],
-            $serverOrigin['port']
+            $serverOrigin["scheme"],
+            $serverOrigin["host"],
+            $serverOrigin["port"]
         );
 
         $settings->setAllowedOrigins($this->options["origin"]);
@@ -263,9 +263,9 @@ final class CorsMiddleware implements MiddlewareInterface
     {
         // set some default
         $url = [
-            'scheme' => 'https',
-            'host' => '',
-            'port' => self::PORT_HTTPS,
+            "scheme" => "https",
+            "host" => "",
+            "port" => self::PORT_HTTPS,
         ];
 
         // load details from server origin
@@ -276,8 +276,8 @@ final class CorsMiddleware implements MiddlewareInterface
                 $url = $url_chunks;
             }
 
-            if (!array_key_exists('port', $url)) {
-                $url['port'] = $url['scheme'] === 'https' ? self::PORT_HTTPS : self::PORT_HTTP;
+            if (!array_key_exists("port", $url)) {
+                $url["port"] = $url["scheme"] === "https" ? self::PORT_HTTPS : self::PORT_HTTP;
             }
         }
 
@@ -293,8 +293,8 @@ final class CorsMiddleware implements MiddlewareInterface
     {
         if (isset($headers[CorsResponseHeaders::EXPOSE_HEADERS])) {
             $headers[CorsResponseHeaders::EXPOSE_HEADERS] = str_replace(
-                ' ',
-                '',
+                " ",
+                "",
                 $headers[CorsResponseHeaders::EXPOSE_HEADERS]
             );
         }
