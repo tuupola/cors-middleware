@@ -32,6 +32,7 @@ rector: vendor
 
 rector-fix: vendor
 	vendor/bin/rector process
+	vendor/bin/ecs check src tests --fix
 
 watch: vendor
 	find . -name "*.php" -not -path "./vendor/*" -o -name "*.json" -not -path "./vendor/*" | entr -c make test
