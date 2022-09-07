@@ -3,15 +3,16 @@
 help:
 	@echo ""
 	@echo "Available tasks:"
-	@echo "    test            Run all tests and generate coverage"
-	@echo "    watch           Run all tests and coverage when a source file is upaded"
-	@echo "    lint            Run only linter and code style checker"
-	@echo "    unit            Run unit tests and generate coverage"
-	@echo "    rector-dry-run  Run rector code migrations and show the proposed changes"
-	@echo "    rector          Run rector code migrations and apply the proposed changes"
-	@echo "    unit            Run static analysis"
-	@echo "    vendor          Install dependencies"
-	@echo "    clean           Remove vendor and composer.lock"
+	@echo "    test        Run all tests and generate coverage"
+	@echo "    watch       Run all tests and coverage when a source file is upaded"
+	@echo "    lint        Run only linter and code style checker"
+	@echo "    lint-fix    Fix linter and code style checker errors"
+	@echo "    unit        Run unit tests and generate coverage"
+	@echo "    rector      Do a Rector dry run"
+	@echo "    rector-fix  Apply Rector rules to the code"
+	@echo "    unit        Run static analysis"
+	@echo "    vendor      Install dependencies"
+	@echo "    clean       Remove vendor and composer.lock"
 	@echo ""
 
 vendor: $(wildcard composer.lock)
@@ -19,7 +20,10 @@ vendor: $(wildcard composer.lock)
 
 lint: vendor
 	vendor/bin/phplint . --exclude=vendor/
-	vendor/bin/phpcs -p --standard=PSR12 --extensions=php --encoding=utf-8 --ignore=*/vendor/*,*/benchmarks/* .
+	vendor/bin/ecs check src tests
+
+lint-fix: vendor
+	vendor/bin/ecs check src tests --fix
 
 unit: vendor
 	phpdbg -qrr vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml --coverage-html=./report/
@@ -27,11 +31,12 @@ unit: vendor
 static: vendor
 	vendor/bin/phpstan analyse src --level max
 
-rector-dry-run: vendor
+rector: vendor
 	vendor/bin/rector process --dry-run
 
-rector: vendor
+rector-fix: vendor
 	vendor/bin/rector process
+	vendor/bin/ecs check src tests --fix
 
 watch: vendor
 	find . -name "*.php" -not -path "./vendor/*" -o -name "*.json" -not -path "./vendor/*" | entr -c make test
@@ -44,4 +49,4 @@ clean:
 	rm .phplint-cache
 	rm -rf report
 
-.PHONY: help lint unit watch test clean rector rector-dry-run
+.PHONY: help lint lint-fix unit watch test clean rector rector-fix
