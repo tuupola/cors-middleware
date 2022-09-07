@@ -223,9 +223,9 @@ final class CorsMiddleware implements MiddlewareInterface
         $serverOrigin = $this->determineServerOrigin();
 
         $settings->init(
-            $serverOrigin['scheme'],
-            $serverOrigin['host'],
-            $serverOrigin['port']
+            $serverOrigin["scheme"],
+            $serverOrigin["host"],
+            $serverOrigin["port"]
         );
 
         $settings->setAllowedOrigins($this->options["origin"]);
@@ -261,14 +261,14 @@ final class CorsMiddleware implements MiddlewareInterface
      */
     private function determineServerOrigin(): array
     {
-        // set some default
+        /* Set defaults */
         $url = [
-            'scheme' => 'https',
-            'host' => '',
-            'port' => self::PORT_HTTPS,
+            "scheme" => "https",
+            "host" => "",
+            "port" => self::PORT_HTTPS,
         ];
 
-        // load details from server origin
+        /* Load details from server origin */
         if (is_string($this->options["origin.server"])) {
             /** @var false|array{scheme: string, host: string, port?: int} $url_chunks */
             $url_chunks = parse_url($this->options["origin.server"]);
@@ -276,8 +276,8 @@ final class CorsMiddleware implements MiddlewareInterface
                 $url = $url_chunks;
             }
 
-            if (!array_key_exists('port', $url)) {
-                $url['port'] = $url['scheme'] === 'https' ? self::PORT_HTTPS : self::PORT_HTTP;
+            if (!array_key_exists("port", $url)) {
+                $url["port"] = $url["scheme"] === "https" ? self::PORT_HTTPS : self::PORT_HTTP;
             }
         }
 
@@ -292,11 +292,12 @@ final class CorsMiddleware implements MiddlewareInterface
     private function fixHeaders(array $headers): array
     {
         if (isset($headers[CorsResponseHeaders::EXPOSE_HEADERS])) {
-            $headers[CorsResponseHeaders::EXPOSE_HEADERS] = str_replace(
-                ' ',
-                '',
-                $headers[CorsResponseHeaders::EXPOSE_HEADERS]
-            );
+            $headers[CorsResponseHeaders::EXPOSE_HEADERS] =
+                str_replace(
+                    " ",
+                    "",
+                    $headers[CorsResponseHeaders::EXPOSE_HEADERS]
+                );
         }
 
         return $headers;

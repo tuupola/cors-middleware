@@ -74,7 +74,7 @@ class CorsMiddlewareTest extends TestCase
         $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware([
             "origin" => [
-                '*.example.com',
+                "*.example.com",
             ],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
@@ -435,7 +435,7 @@ class CorsMiddlewareTest extends TestCase
             ->withHeader("Access-Control-Request-Headers", "X-Nosuch")
             ->withHeader("Access-Control-Request-Method", "PUT");
 
-        $interceptedClassName = '';
+        $interceptedClassName = "";
 
         $response = (new ResponseFactory())->createResponse();
         $logger = new NullLogger();
@@ -445,7 +445,7 @@ class CorsMiddlewareTest extends TestCase
             "methods" => function () use (&$interceptedClassName) {
                 $interceptedClassName = get_class($this);
 
-                return ['GET'];
+                return ["GET"];
             },
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
