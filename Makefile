@@ -19,7 +19,7 @@ vendor: $(wildcard composer.lock)
 
 lint: vendor
 	vendor/bin/phplint . --exclude=vendor/
-	vendor/bin/phpcs -p --standard=PSR12 --extensions=php --encoding=utf-8 --ignore=*/vendor/*,*/benchmarks/* .
+	vendor/bin/ecs check src tests
 
 unit: vendor
 	phpdbg -qrr vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml --coverage-html=./report/
