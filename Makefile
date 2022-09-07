@@ -6,6 +6,7 @@ help:
 	@echo "    test        Run all tests and generate coverage"
 	@echo "    watch       Run all tests and coverage when a source file is upaded"
 	@echo "    lint        Run only linter and code style checker"
+	@echo "    lint-fix    Fix linter and code style checker errors"
 	@echo "    unit        Run unit tests and generate coverage"
 	@echo "    rector      Do a Rector dry run"
 	@echo "    rector-fix  Apply Rector rules to the code"
@@ -20,6 +21,9 @@ vendor: $(wildcard composer.lock)
 lint: vendor
 	vendor/bin/phplint . --exclude=vendor/
 	vendor/bin/ecs check src tests
+
+lint-fix: vendor
+	vendor/bin/ecs check src tests --fix
 
 unit: vendor
 	phpdbg -qrr vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml --coverage-html=./report/
@@ -45,4 +49,4 @@ clean:
 	rm .phplint-cache
 	rm -rf report
 
-.PHONY: help lint unit watch test clean rector rector-fix
+.PHONY: help lint lint-fix unit watch test clean rector rector-fix
