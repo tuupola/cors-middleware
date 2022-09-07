@@ -261,14 +261,14 @@ final class CorsMiddleware implements MiddlewareInterface
      */
     private function determineServerOrigin(): array
     {
-        // set some default
+        /* Set defaults */
         $url = [
             "scheme" => "https",
             "host" => "",
             "port" => self::PORT_HTTPS,
         ];
 
-        // load details from server origin
+        /* Load details from server origin */
         if (is_string($this->options["origin.server"])) {
             /** @var false|array{scheme: string, host: string, port?: int} $url_chunks */
             $url_chunks = parse_url($this->options["origin.server"]);

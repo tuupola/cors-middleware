@@ -9,16 +9,16 @@ use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
 
 return static function (RectorConfig $rectorConfig): void {
-    // path to phpstan config
+    /* Path to phpstan config */
     $rectorConfig->phpstanConfig(__DIR__ . "/phpstan.neon");
 
-    // add src and tests folder as refactoring targets
+    /* Add src and tests folder as refactoring targets */
     $rectorConfig->paths([
         __DIR__ . "/src",
         __DIR__ . "/tests",
     ]);
 
-    // define sets of rules
+    /* Define sets of rules */
     $rectorConfig->sets([
         LevelSetList::UP_TO_PHP_72,
         SetList::CODING_STYLE,
@@ -26,7 +26,7 @@ return static function (RectorConfig $rectorConfig): void {
         SetList::CODE_QUALITY,
     ]);
 
-    // skip closure transformation
+    /* Skip closure transformation */
     $rectorConfig->skip([
         StaticClosureRector::class,
         SimplifyIfElseToTernaryRector::class,

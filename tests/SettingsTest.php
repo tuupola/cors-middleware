@@ -57,37 +57,37 @@ class SettingsTest extends TestCase
 
     public function wildcardOriginDataProvider(): Generator
     {
-        // Allow subdomain without wildcard
+        /* Allow subdomain without wildcard */
         yield ["https://www.example.com", "https://www.example.com", true];
 
-        // Disallow wrong subdomain
+        /* Disallow wrong subdomain */
         yield ["https://ws.example.com", "https://www.example.com", false];
 
-        // Allow all
+        /* Allow all */
         yield ["https://ws.example.com", "*", true];
 
-        // Allow subdomain wildcard
+        /* Allow subdomain wildcard */
         yield ["https://ws.example.com", "https://*.example.com", true];
 
-        // Allow without specifying protocol
+        /* Allow without specifying protocol */
         yield ["https://ws.example.com", "*.example.com", true];
 
-        // Allow double subdomain for wildcard
+        /* Allow double subdomain for wildcard */
         yield ["https://a.b.example.com", "*.example.com", true];
 
-        // Disallow for incorrect domain wildcard
+        /* Disallow for incorrect domain wildcard */
         yield ["https://a.example.com.evil.com", "*.example.com", false];
 
-        // Allow subdomain in the middle
+        /* Allow subdomain in the middle */
         yield ["a.b.example.com", "a.*.example.com", true];
 
-        // Disallow wrong subdomain
+        /* Disallow wrong subdomain */
         yield ["b.bc.example.com", "a.*.example.com", false];
 
-        // Correctly handle dots
+        /* Correctly handle dots */
         yield ["exampleXcom", "example.com", false];
 
-        // Allow subdomain and domain with one rule
+        /* Allow subdomain and domain with one rule */
         yield ["test.example.com", "*example*", true];
     }
 }
