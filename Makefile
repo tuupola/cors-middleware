@@ -45,4 +45,4 @@ clean:
 	rm .phplint-cache
 	rm -rf report
 
-.PHONY: help lint unit watch test clean rector rector-dry-run
+.PHONY: help lint unit watch test clean rector rector-fix
