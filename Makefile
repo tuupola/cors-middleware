@@ -27,10 +27,10 @@ unit: vendor
 static: vendor
 	vendor/bin/phpstan analyse src --level max
 
-rector-dry-run: vendor
+rector: vendor
 	vendor/bin/rector process --dry-run
 
-rector: vendor
+rector-fix: vendor
 	vendor/bin/rector process
 
 watch: vendor
