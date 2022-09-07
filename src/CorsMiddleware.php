@@ -292,11 +292,12 @@ final class CorsMiddleware implements MiddlewareInterface
     private function fixHeaders(array $headers): array
     {
         if (isset($headers[CorsResponseHeaders::EXPOSE_HEADERS])) {
-            $headers[CorsResponseHeaders::EXPOSE_HEADERS] = str_replace(
-                " ",
-                "",
-                $headers[CorsResponseHeaders::EXPOSE_HEADERS]
-            );
+            $headers[CorsResponseHeaders::EXPOSE_HEADERS] =
+                str_replace(
+                    " ",
+                    "",
+                    $headers[CorsResponseHeaders::EXPOSE_HEADERS]
+                );
         }
 
         return $headers;
