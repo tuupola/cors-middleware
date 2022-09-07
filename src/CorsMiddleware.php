@@ -155,8 +155,8 @@ final class CorsMiddleware implements MiddlewareInterface
                 $cors_headers = $cors->getResponseHeaders();
                 foreach ($cors_headers as $header => $value) {
                     /* Diactoros errors on integer values. */
-                    if (!is_array($value)) {
-                        $value = (string)$value;
+                    if (! is_array($value)) {
+                        $value = (string) $value;
                     }
 
                     $response = $response->withHeader($header, $value);
@@ -173,8 +173,8 @@ final class CorsMiddleware implements MiddlewareInterface
 
                 foreach ($cors_headers as $header => $value) {
                     /* Diactoros errors on integer values. */
-                    if (!is_array($value)) {
-                        $value = (string)$value;
+                    if (! is_array($value)) {
+                        $value = (string) $value;
                     }
 
                     $response = $response->withHeader($header, $value);
@@ -276,7 +276,7 @@ final class CorsMiddleware implements MiddlewareInterface
                 $url = $url_chunks;
             }
 
-            if (!array_key_exists("port", $url)) {
+            if (! array_key_exists("port", $url)) {
                 $url["port"] = $url["scheme"] === "https" ? self::PORT_HTTPS : self::PORT_HTTP;
             }
         }

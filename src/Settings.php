@@ -46,7 +46,7 @@ class Settings extends BaseSettings
     {
         $isAllowed = parent::isRequestOriginAllowed($requestOrigin);
 
-        if (!$isAllowed) {
+        if (! $isAllowed) {
             $isAllowed = $this->wildcardOriginAllowed($requestOrigin);
         }
 
