@@ -109,7 +109,7 @@ class CorsMiddlewareTest extends TestCase
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
-            "cache" => 86400
+            "cache" => 86400,
         ]);
 
         $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
@@ -137,7 +137,7 @@ class CorsMiddlewareTest extends TestCase
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
-            "cache" => 86400
+            "cache" => 86400,
         ]);
 
         $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
@@ -162,7 +162,7 @@ class CorsMiddlewareTest extends TestCase
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
-            "cache" => 86400
+            "cache" => 86400,
         ]);
 
         $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
@@ -189,7 +189,7 @@ class CorsMiddlewareTest extends TestCase
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
-            "cache" => 86400
+            "cache" => 86400,
         ]);
 
         $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
@@ -219,7 +219,7 @@ class CorsMiddlewareTest extends TestCase
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
-            "cache" => 86400
+            "cache" => 86400,
         ]);
 
         $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
@@ -247,7 +247,7 @@ class CorsMiddlewareTest extends TestCase
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
-            "cache" => 86400
+            "cache" => 86400,
         ]);
 
         $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
@@ -277,7 +277,7 @@ class CorsMiddlewareTest extends TestCase
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
-            "cache" => 86400
+            "cache" => 86400,
         ]);
 
         $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
@@ -305,7 +305,7 @@ class CorsMiddlewareTest extends TestCase
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
-            "cache" => 86400
+            "cache" => 86400,
         ]);
 
         $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
@@ -335,7 +335,7 @@ class CorsMiddlewareTest extends TestCase
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
-            "cache" => 86400
+            "cache" => 86400,
         ]);
 
         $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
@@ -366,7 +366,7 @@ class CorsMiddlewareTest extends TestCase
             "cache" => 86400,
             "error" => function ($request, $response, $arguments) {
                 return "ignored";
-            }
+            },
         ]);
 
         $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
@@ -393,7 +393,7 @@ class CorsMiddlewareTest extends TestCase
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
-            "cache" => 86400
+            "cache" => 86400,
         ]);
 
         $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
@@ -414,7 +414,7 @@ class CorsMiddlewareTest extends TestCase
         $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware([
             "origin" => [],
-            "origin.server" => "https://example.com"
+            "origin.server" => "https://example.com",
         ]);
 
         $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
@@ -450,7 +450,7 @@ class CorsMiddlewareTest extends TestCase
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
-            "cache" => 86400
+            "cache" => 86400,
         ]);
 
         $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
@@ -488,7 +488,7 @@ class CorsMiddlewareTest extends TestCase
             "error" => function ($request, $response, $arguments) {
                 $response->getBody()->write(get_class($this));
                 return $response;
-            }
+            },
         ]);
 
         $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
@@ -519,7 +519,7 @@ class CorsMiddlewareTest extends TestCase
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
             "cache" => 86400,
-            "error" => new TestErrorHandler()
+            "error" => new TestErrorHandler(),
         ]);
 
         $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
@@ -556,7 +556,7 @@ class CorsMiddlewareTest extends TestCase
                 array $arguments
             ): ResponseInterface {
                 return TestErrorHandler::error($request, $response, $arguments);
-            }
+            },
         ]);
 
         $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
@@ -588,8 +588,8 @@ class CorsMiddlewareTest extends TestCase
                 "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
                 "headers.expose" => ["Authorization", "Etag"],
                 "credentials" => true,
-                "cache" => 86400
-            ])
+                "cache" => 86400,
+            ]),
         ]);
 
         $response = $collection->dispatch($request, $default);
