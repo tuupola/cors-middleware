@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Rector\CodeQuality\Rector\If_\SimplifyIfElseToTernaryRector;
+use Rector\CodingStyle\Rector\ArrowFunction\StaticArrowFunctionRector;
 use Rector\CodingStyle\Rector\Closure\StaticClosureRector;
 use Rector\Config\RectorConfig;
 use Rector\Set\ValueObject\LevelSetList;
@@ -20,7 +21,7 @@ return static function (RectorConfig $rectorConfig): void {
 
     /* Define sets of rules */
     $rectorConfig->sets([
-        LevelSetList::UP_TO_PHP_72,
+        LevelSetList::UP_TO_PHP_80,
         SetList::CODING_STYLE,
         SetList::DEAD_CODE,
         SetList::CODE_QUALITY,
@@ -30,6 +31,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->skip([
         StaticClosureRector::class,
         SimplifyIfElseToTernaryRector::class,
+        StaticArrowFunctionRector::class,
     ]);
 
     $rectorConfig->importNames();

@@ -33,7 +33,7 @@ use Neomerx\Cors\Strategies\Settings as BaseSettings;
 class Settings extends BaseSettings
 {
     /** @var array<string> */
-    private $allowedOrigins = [];
+    private array $allowedOrigins = [];
 
     public function setAllowedOrigins(array $origins): BaseSettings
     {

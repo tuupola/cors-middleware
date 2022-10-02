@@ -69,8 +69,7 @@ final class CorsMiddleware implements MiddlewareInterface
     /** @var int */
     private const PORT_HTTPS = 443;
 
-    /** @var LoggerInterface|null */
-    private $logger;
+    private ?LoggerInterface $logger = null;
 
     /**
      * @var array{
@@ -85,7 +84,7 @@ final class CorsMiddleware implements MiddlewareInterface
      *  logger: null|LoggerInterface,
      * }
      */
-    private $options = [
+    private array $options = [
         "origin" => ["*"],
         "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
         "headers.allow" => [],
@@ -315,7 +314,7 @@ final class CorsMiddleware implements MiddlewareInterface
      * Set request methods to be allowed.
      * @param callable|array $methods.
      */
-    private function methods($methods): void
+    private function methods(callable|array $methods): void
     {
         if (is_callable($methods)) {
             if ($methods instanceof Closure) {
@@ -324,7 +323,7 @@ final class CorsMiddleware implements MiddlewareInterface
                 $this->options["methods"] = $methods;
             }
         } else {
-            $this->options["methods"] = (array) $methods;
+            $this->options["methods"] = $methods;
         }
     }
 

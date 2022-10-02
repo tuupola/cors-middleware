@@ -33,8 +33,7 @@ use PHPUnit\Framework\TestCase;
 
 class SettingsTest extends TestCase
 {
-    /** @var Settings */
-    private $testObject;
+    private Settings $testObject;
 
     protected function setUp(): void
     {

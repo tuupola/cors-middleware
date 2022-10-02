@@ -213,9 +213,7 @@ class CorsMiddlewareTest extends TestCase
         $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware([
             "origin" => "*",
-            "methods" => function ($request) {
-                return ["GET", "POST", "DELETE"];
-            },
+            "methods" => fn ($request) => ["GET", "POST", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
@@ -271,9 +269,7 @@ class CorsMiddlewareTest extends TestCase
         $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware([
             "origin" => ["*"],
-            "methods" => function ($request) {
-                return ["GET", "POST", "DELETE"];
-            },
+            "methods" => fn ($request) => ["GET", "POST", "DELETE"],
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
@@ -329,9 +325,7 @@ class CorsMiddlewareTest extends TestCase
         $response = (new ResponseFactory())->createResponse();
         $cors = new CorsMiddleware([
             "origin" => ["*"],
-            "methods" => function (ServerRequestInterface $request) {
-                return TestMethodsHandler::methods($request);
-            },
+            "methods" => fn (ServerRequestInterface $request) => TestMethodsHandler::methods($request),
             "headers.allow" => ["Authorization", "If-Match", "If-Unmodified-Since"],
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
@@ -364,9 +358,7 @@ class CorsMiddlewareTest extends TestCase
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
             "cache" => 86400,
-            "error" => function ($request, $response, $arguments) {
-                return "ignored";
-            },
+            "error" => fn ($request, $response, $arguments) => "ignored",
         ]);
 
         $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
@@ -443,7 +435,7 @@ class CorsMiddlewareTest extends TestCase
             "logger" => $logger,
             "origin" => ["*"],
             "methods" => function () use (&$interceptedClassName) {
-                $interceptedClassName = get_class($this);
+                $interceptedClassName = $this::class;
 
                 return ["GET"];
             },
@@ -486,7 +478,7 @@ class CorsMiddlewareTest extends TestCase
             "credentials" => true,
             "cache" => 86400,
             "error" => function ($request, $response, $arguments) {
-                $response->getBody()->write(get_class($this));
+                $response->getBody()->write($this::class);
                 return $response;
             },
         ]);
@@ -498,7 +490,7 @@ class CorsMiddlewareTest extends TestCase
 
         $response = $cors($request, $response, $next);
         $this->assertEquals(401, $response->getStatusCode());
-        $this->assertEquals(get_class($cors), $response->getBody());
+        $this->assertEquals($cors::class, $response->getBody());
     }
 
     public function testShouldCallInvokableErrorClass(): void
@@ -550,13 +542,7 @@ class CorsMiddlewareTest extends TestCase
             "headers.expose" => ["Authorization", "Etag"],
             "credentials" => true,
             "cache" => 86400,
-            "error" => function (
-                ServerRequestInterface $request,
-                ResponseInterface $response,
-                array $arguments
-            ): ResponseInterface {
-                return TestErrorHandler::error($request, $response, $arguments);
-            },
+            "error" => fn (ServerRequestInterface $request, ResponseInterface $response, array $arguments): ResponseInterface => TestErrorHandler::error($request, $response, $arguments),
         ]);
 
         $next = static function (ServerRequestInterface $request, ResponseInterface $response) {
