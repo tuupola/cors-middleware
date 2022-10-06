@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file, in reverse 
 - Support for `neomerx/cors-psr7:^3.0` ([#72](https://github.com/tuupola/cors-middleware/pull/72)).
 
 ### Changed
-- PHP 7.2 is now minimum requirement ([#63](https://github.com/tuupola/cors-middleware/pull/63)).
+- PHP 7.2 is now the minimum requirement ([#63](https://github.com/tuupola/cors-middleware/pull/63)).
 - PHPStan now uses strict rules ([#63](https://github.com/tuupola/cors-middleware/pull/63)).
 - Upgrade to `neomerx/cors-psr7:^2.0` ([#67](https://github.com/tuupola/cors-middleware/pull/67)).
 
