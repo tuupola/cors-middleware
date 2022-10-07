@@ -50,6 +50,7 @@ use Tuupola\Middleware\Settings as CorsSettings;
 /**
  * @template TSanitizedOptions of array{
  *  origin?: array<string>,
+ *  methods?: array<string>|callable|null,
  *  "headers.allow"?: array<string>,
  *  "headers.expose"?: array<string>,
  *  credentials?: bool,
@@ -99,7 +100,8 @@ final class CorsMiddleware implements MiddlewareInterface
 
     /**
      * @param array{
-     *  origin?: string,
+     *  origin?: string|array<string>,
+     *  methods?: array<string>|callable|null,
      *  "headers.allow"?: array<string>,
      *  "headers.expose"?: array<string>,
      *  credentials?: bool,
