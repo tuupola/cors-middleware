@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## [1.4.1](https://github.com/tuupola/cors-middleware/compare/1.4.0...masters) - unreleased
+### Fixed
+- PHPStan annotations for the constructor ([#73](https://github.com/tuupola/cors-middleware/pull/73)).
+
+
 ## [1.4.0](https://github.com/tuupola/cors-middleware/compare/1.3.0...1.4.0) - 2022-10-06
 ### Added
 - Support for `neomerx/cors-psr7:^3.0` ([#72](https://github.com/tuupola/cors-middleware/pull/72)).
