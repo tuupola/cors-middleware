@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## [1.4.1](https://github.com/tuupola/cors-middleware/compare/1.4.0...masters) - unreleased
+## [1.4.1](https://github.com/tuupola/cors-middleware/compare/1.4.0...1.4.1) - 2022-10-07
 ### Fixed
 - PHPStan annotations for the constructor ([#73](https://github.com/tuupola/cors-middleware/pull/73)).
 
