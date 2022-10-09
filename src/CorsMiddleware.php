@@ -266,7 +266,7 @@ final class CorsMiddleware implements MiddlewareInterface
         /* Set defaults */
         $url = [
             "scheme" => "https",
-            "host" => "",
+            "host" => "localhost",
             "port" => self::PORT_HTTPS,
         ];
 
