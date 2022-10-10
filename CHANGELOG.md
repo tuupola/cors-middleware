@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## [1.4.2](https://github.com/tuupola/cors-middleware/compare/1.4.1...1.4.2) - unreleased
+## [1.4.2](https://github.com/tuupola/cors-middleware/compare/1.4.1...1.4.2) - 2022-10-10
 ### Fixed
 - AssertionError if user had `zend.assertions` enabled php.ini ([#75](https://github.com/tuupola/cors-middleware/pull/75), [#76](https://github.com/tuupola/cors-middleware/pull/76)).
 
