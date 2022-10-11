@@ -11,16 +11,13 @@ use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\PHPUnit\Rector\Class_\AddSeeTestAnnotationRector;
 
 return static function (RectorConfig $rectorConfig): void {
-    /* Path to phpstan config */
     $rectorConfig->phpstanConfig(__DIR__ . "/phpstan.neon");
 
-    /* Add src and tests folder as refactoring targets */
     $rectorConfig->paths([
         __DIR__ . "/src",
         __DIR__ . "/tests",
     ]);
 
-    /* Define sets of rules */
     $rectorConfig->sets([
         LevelSetList::UP_TO_PHP_72,
         SetList::CODE_QUALITY,
