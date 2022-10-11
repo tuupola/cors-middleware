@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## [1.4.3](https://github.com/tuupola/cors-middleware/compare/1.4.2...1.4.3) - unreleased
+## [1.4.3](https://github.com/tuupola/cors-middleware/compare/1.4.2...1.4.3) - 2020-10-11
 ### Fixed
 - TSanitizedOptions causing PHPStan error ([#78](https://github.com/tuupola/cors-middleware/issues/78), [#79](https://github.com/tuupola/cors-middleware/pull/79)).
 
