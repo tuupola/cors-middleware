@@ -62,7 +62,7 @@ class CorsMiddlewareTest extends TestCase
         };
 
         $response = $cors($request, $response, $next);
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testShouldAcceptWildcardSettings(): void
@@ -89,11 +89,11 @@ class CorsMiddlewareTest extends TestCase
         };
 
         $response = $cors($request, $response, $next);
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals("https://subdomain.example.com", $response->getHeaderLine("Access-Control-Allow-Origin"));
-        $this->assertEquals("true", $response->getHeaderLine("Access-Control-Allow-Credentials"));
-        $this->assertEquals("Origin", $response->getHeaderLine("Vary"));
-        $this->assertEquals("Authorization,Etag", $response->getHeaderLine("Access-Control-Expose-Headers"));
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame("https://subdomain.example.com", $response->getHeaderLine("Access-Control-Allow-Origin"));
+        $this->assertSame("true", $response->getHeaderLine("Access-Control-Allow-Credentials"));
+        $this->assertSame("Origin", $response->getHeaderLine("Vary"));
+        $this->assertSame("Authorization,Etag", $response->getHeaderLine("Access-Control-Expose-Headers"));
     }
 
     public function testShouldHaveCorsHeaders(): void
@@ -118,10 +118,10 @@ class CorsMiddlewareTest extends TestCase
         };
 
         $response = $cors($request, $response, $next);
-        $this->assertEquals("http://www.example.com", $response->getHeaderLine("Access-Control-Allow-Origin"));
-        $this->assertEquals("true", $response->getHeaderLine("Access-Control-Allow-Credentials"));
-        $this->assertEquals("Origin", $response->getHeaderLine("Vary"));
-        $this->assertEquals("Authorization,Etag", $response->getHeaderLine("Access-Control-Expose-Headers"));
+        $this->assertSame("http://www.example.com", $response->getHeaderLine("Access-Control-Allow-Origin"));
+        $this->assertSame("true", $response->getHeaderLine("Access-Control-Allow-Credentials"));
+        $this->assertSame("Origin", $response->getHeaderLine("Vary"));
+        $this->assertSame("Authorization,Etag", $response->getHeaderLine("Access-Control-Expose-Headers"));
     }
 
     public function testShouldReturn401WithWrongOrigin(): void
@@ -146,7 +146,7 @@ class CorsMiddlewareTest extends TestCase
         };
 
         $response = $cors($request, $response, $next);
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertSame(401, $response->getStatusCode());
     }
 
     public function testShouldReturn200WithCorrectOrigin(): void
@@ -171,7 +171,7 @@ class CorsMiddlewareTest extends TestCase
         };
 
         $response = $cors($request, $response, $next);
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testShouldReturn401WithWrongMethod(): void
@@ -199,7 +199,7 @@ class CorsMiddlewareTest extends TestCase
 
         $response = $cors($request, $response, $next);
 
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertSame(401, $response->getStatusCode());
     }
 
     public function testShouldReturn401WithWrongMethodFromFunction(): void
@@ -229,7 +229,7 @@ class CorsMiddlewareTest extends TestCase
 
         $response = $cors($request, $response, $next);
 
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertSame(401, $response->getStatusCode());
     }
 
     public function testShouldReturn401WithWrongMethodFromInvokableClass(): void
@@ -257,7 +257,7 @@ class CorsMiddlewareTest extends TestCase
 
         $response = $cors($request, $response, $next);
 
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertSame(401, $response->getStatusCode());
     }
 
     public function testShouldReturn200WithCorrectMethodFromFunction(): void
@@ -287,7 +287,7 @@ class CorsMiddlewareTest extends TestCase
 
         $response = $cors($request, $response, $next);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testShouldReturn200WithCorrectMethodFromInvokableClass(): void
@@ -315,7 +315,7 @@ class CorsMiddlewareTest extends TestCase
 
         $response = $cors($request, $response, $next);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testShouldReturn200WithCorrectMethodUsingArrayNotation(): void
@@ -345,7 +345,7 @@ class CorsMiddlewareTest extends TestCase
 
         $response = $cors($request, $response, $next);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testShouldReturn401WithWrongHeader(): void
@@ -375,7 +375,7 @@ class CorsMiddlewareTest extends TestCase
         };
 
         $response = $cors($request, $response, $next);
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertSame(401, $response->getStatusCode());
     }
 
     public function testShouldReturn200WithProperPreflightRequest(): void
@@ -402,7 +402,7 @@ class CorsMiddlewareTest extends TestCase
         };
 
         $response = $cors($request, $response, $next);
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testShouldReturn200WithNoCorsHeaders(): void
@@ -423,7 +423,7 @@ class CorsMiddlewareTest extends TestCase
         };
 
         $response = $cors($request, $response, $next);
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
         $this->assertEmpty($response->getHeaderLine("Access-Control-Allow-Origin"));
     }
 
@@ -464,7 +464,7 @@ class CorsMiddlewareTest extends TestCase
             CorsMiddleware::class,
             $interceptedClassName
         );
-        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertSame(401, $response->getStatusCode());
     }
 
     public function testShouldCallAnonymousErrorFunction(): void
@@ -497,8 +497,8 @@ class CorsMiddlewareTest extends TestCase
         };
 
         $response = $cors($request, $response, $next);
-        $this->assertEquals(401, $response->getStatusCode());
-        $this->assertEquals(get_class($cors), $response->getBody());
+        $this->assertSame(401, $response->getStatusCode());
+        $this->assertInstanceOf($response->getBody(), $cors);
     }
 
     public function testShouldCallInvokableErrorClass(): void
@@ -528,8 +528,8 @@ class CorsMiddlewareTest extends TestCase
         };
 
         $response = $cors($request, $response, $next);
-        $this->assertEquals(402, $response->getStatusCode());
-        $this->assertEquals(TestErrorHandler::class, $response->getBody());
+        $this->assertSame(402, $response->getStatusCode());
+        $this->assertSame(TestErrorHandler::class, $response->getBody());
     }
 
     public function testShouldCallArrayNotationError(): void
@@ -565,8 +565,8 @@ class CorsMiddlewareTest extends TestCase
         };
 
         $response = $cors($request, $response, $next);
-        $this->assertEquals(418, $response->getStatusCode());
-        $this->assertEquals(TestErrorHandler::class, $response->getBody());
+        $this->assertSame(418, $response->getStatusCode());
+        $this->assertSame(TestErrorHandler::class, $response->getBody());
     }
 
     public function testShouldHandlePsr15(): void
@@ -594,10 +594,10 @@ class CorsMiddlewareTest extends TestCase
 
         $response = $collection->dispatch($request, $default);
 
-        $this->assertEquals("http://www.example.com", $response->getHeaderLine("Access-Control-Allow-Origin"));
-        $this->assertEquals("true", $response->getHeaderLine("Access-Control-Allow-Credentials"));
-        $this->assertEquals("Origin", $response->getHeaderLine("Vary"));
-        $this->assertEquals("Authorization,Etag", $response->getHeaderLine("Access-Control-Expose-Headers"));
-        $this->assertEquals("Success", $response->getBody());
+        $this->assertSame("http://www.example.com", $response->getHeaderLine("Access-Control-Allow-Origin"));
+        $this->assertSame("true", $response->getHeaderLine("Access-Control-Allow-Credentials"));
+        $this->assertSame("Origin", $response->getHeaderLine("Vary"));
+        $this->assertSame("Authorization,Etag", $response->getHeaderLine("Access-Control-Expose-Headers"));
+        $this->assertSame("Success", $response->getBody());
     }
 }
