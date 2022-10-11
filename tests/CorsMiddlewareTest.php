@@ -529,7 +529,7 @@ class CorsMiddlewareTest extends TestCase
 
         $response = $cors($request, $response, $next);
         $this->assertSame(402, $response->getStatusCode());
-        $this->assertSame(TestErrorHandler::class, $response->getBody());
+        $this->assertSame(TestErrorHandler::class, (string) $response->getBody());
     }
 
     public function testShouldCallArrayNotationError(): void
@@ -566,7 +566,7 @@ class CorsMiddlewareTest extends TestCase
 
         $response = $cors($request, $response, $next);
         $this->assertSame(418, $response->getStatusCode());
-        $this->assertSame(TestErrorHandler::class, $response->getBody());
+        $this->assertSame(TestErrorHandler::class, (string) $response->getBody());
     }
 
     public function testShouldHandlePsr15(): void
@@ -598,6 +598,6 @@ class CorsMiddlewareTest extends TestCase
         $this->assertSame("true", $response->getHeaderLine("Access-Control-Allow-Credentials"));
         $this->assertSame("Origin", $response->getHeaderLine("Vary"));
         $this->assertSame("Authorization,Etag", $response->getHeaderLine("Access-Control-Expose-Headers"));
-        $this->assertSame("Success", $response->getBody());
+        $this->assertSame("Success", (string) $response->getBody());
     }
 }
