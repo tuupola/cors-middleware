@@ -174,7 +174,6 @@ final class CorsMiddleware implements MiddlewareInterface
 
     /**
      * Hydrate all options from the given array.
-     *
      */
     private function hydrate(array $data = []): void
     {
