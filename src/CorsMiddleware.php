@@ -47,19 +47,6 @@ use Psr\Log\LoggerInterface;
 use Tuupola\Http\Factory\ResponseFactory;
 use Tuupola\Middleware\Settings as CorsSettings;
 
-/**
- * @template TSanitizedOptions of array{
- *  origin?: array<string>,
- *  methods?: array<string>|callable|null,
- *  "headers.allow"?: array<string>,
- *  "headers.expose"?: array<string>,
- *  credentials?: bool,
- *  "origin.server"?: null|string|array<string>,
- *  cache?: int,
- *  error?: null|callable,
- *  logger?: null|LoggerInterface,
- * }
- */
 final class CorsMiddleware implements MiddlewareInterface
 {
     use DoublePassTrait;
@@ -118,7 +105,6 @@ final class CorsMiddleware implements MiddlewareInterface
             $options["origin"] = (array) $options["origin"];
         }
 
-        /** @var TSanitizedOptions $options */
         /* Store passed in options overwriting any defaults. */
         $this->hydrate($options);
     }
@@ -188,8 +174,6 @@ final class CorsMiddleware implements MiddlewareInterface
 
     /**
      * Hydrate all options from the given array.
-     *
-     * @param TSanitizedOptions $data
      */
     private function hydrate(array $data = []): void
     {

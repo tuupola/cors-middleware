@@ -2,10 +2,13 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
+## [1.4.3](https://github.com/tuupola/cors-middleware/compare/1.4.2...1.4.3) - unreleased
+### Fixed
+- TSanitizedOptions causing PHPStan error ([#78](https://github.com/tuupola/cors-middleware/issues/78), [#79](https://github.com/tuupola/cors-middleware/pull/79)).
+
 ## [1.4.2](https://github.com/tuupola/cors-middleware/compare/1.4.1...1.4.2) - 2022-10-10
 ### Fixed
 - AssertionError if user had `zend.assertions` enabled php.ini ([#75](https://github.com/tuupola/cors-middleware/pull/75), [#76](https://github.com/tuupola/cors-middleware/pull/76)).
-
 
 ## [1.4.1](https://github.com/tuupola/cors-middleware/compare/1.4.0...1.4.1) - 2022-10-07
 ### Fixed
