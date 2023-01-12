@@ -5,7 +5,7 @@ This middleware implements [Cross-origin resource sharing](https://en.wikipedia.
 [![Latest Version](https://img.shields.io/packagist/v/tuupola/cors-middleware.svg?style=flat-square)](https://packagist.org/packages/tuupola/cors-middleware)
 [![Packagist](https://img.shields.io/packagist/dm/tuupola/cors-middleware.svg)](https://packagist.org/packages/tuupola/cors-middleware)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
-[![Build Status](https://img.shields.io/github/workflow/status/tuupola/cors-middleware/Tests/master?style=flat-square)](https://github.com/tuupola/cors-middleware/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/tuupola/cors-middleware/tests.yml?branch=master&style=flat-square)](https://github.com/tuupola/cors-middleware/actions)
 [![Coverage](https://img.shields.io/codecov/c/github/tuupola/cors-middleware.svg?style=flat-square)](https://codecov.io/github/tuupola/cors-middleware)
 
 ## Install
