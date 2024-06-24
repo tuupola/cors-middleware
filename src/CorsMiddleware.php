@@ -291,6 +291,7 @@ final class CorsMiddleware implements MiddlewareInterface
 
     /**
      * Set allowed origin.
+     * @phpstan-ignore method.unused
      */
     private function origin(array $origin): void
     {
@@ -300,6 +301,7 @@ final class CorsMiddleware implements MiddlewareInterface
     /**
      * Set request methods to be allowed.
      * @param callable|array $methods.
+     * @phpstan-ignore method.unused
      */
     private function methods($methods): void
     {
@@ -316,6 +318,7 @@ final class CorsMiddleware implements MiddlewareInterface
 
     /**
      * Set headers to be allowed.
+     * @phpstan-ignore method.unused
      */
     private function headersAllow(array $headers): void
     {
@@ -324,6 +327,7 @@ final class CorsMiddleware implements MiddlewareInterface
 
     /**
      * Set headers to be exposed.
+     * @phpstan-ignore method.unused
      */
     private function headersExpose(array $headers): void
     {
@@ -332,6 +336,7 @@ final class CorsMiddleware implements MiddlewareInterface
 
     /**
      * Enable or disable cookies and authentication.
+     * @phpstan-ignore method.unused
      */
     private function credentials(bool $credentials): void
     {
@@ -340,6 +345,7 @@ final class CorsMiddleware implements MiddlewareInterface
 
     /**
      * Set the server origin.
+     * @phpstan-ignore method.unused
      */
     private function originServer(?string $origin): void
     {
@@ -348,6 +354,7 @@ final class CorsMiddleware implements MiddlewareInterface
 
     /**
      * Set the cache time in seconds.
+     * @phpstan-ignore method.unused
      */
     private function cache(int $cache): void
     {
@@ -356,6 +363,7 @@ final class CorsMiddleware implements MiddlewareInterface
 
     /**
      * Set the error handler.
+     * @phpstan-ignore method.unused
      */
     private function error(callable $error): void
     {
@@ -368,6 +376,7 @@ final class CorsMiddleware implements MiddlewareInterface
 
     /**
      * Set the PSR-3 logger.
+     * @phpstan-ignore method.unused
      */
     private function logger(LoggerInterface $logger = null): void
     {
