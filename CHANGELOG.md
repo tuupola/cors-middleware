@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file, in reverse chronological order by release.
 
-## [1.4.3](https://github.com/tuupola/cors-middleware/compare/1.4.2...1.4.3) - 2020-10-11
+## [1.5.0](https://github.com/tuupola/cors-middleware/compare/1.4.3...1.5.0) - 2025-02-14
+### Added
+- Allow installing with psr/http-message ^2.0 ([#90](https://github.com/tuupola/cors-middleware/pull/90))
+### Fixed
+- Implicitly marking parameter as nullable is deprecated error ([#91](https://github.com/tuupola/cors-middleware/issues/91), [#92](https://github.com/tuupola/cors-middleware/pull/92)).
+
+## [1.4.3](https://github.com/tuupola/cors-middleware/compare/1.4.2...1.4.3) - 2022-10-11
 ### Fixed
 - TSanitizedOptions causing PHPStan error ([#78](https://github.com/tuupola/cors-middleware/issues/78), [#79](https://github.com/tuupola/cors-middleware/pull/79)).
 
