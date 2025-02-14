@@ -378,7 +378,7 @@ final class CorsMiddleware implements MiddlewareInterface
      * Set the PSR-3 logger.
      * @phpstan-ignore method.unused
      */
-    private function logger(LoggerInterface $logger = null): void
+    private function logger(?LoggerInterface $logger = null): void
     {
         $this->logger = $logger;
     }
@@ -389,7 +389,7 @@ final class CorsMiddleware implements MiddlewareInterface
     private function processError(
         ServerRequestInterface $request,
         ResponseInterface $response,
-        array $arguments = null
+        ?array $arguments = null
     ): ResponseInterface {
         if (is_callable($this->options["error"])) {
             $handler_response = $this->options["error"]($request, $response, $arguments);
