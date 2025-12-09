@@ -165,7 +165,7 @@ final class CorsMiddleware implements MiddlewareInterface
                         $value = (string) $value;
                     }
 
-                    $response = $response->withHeader($header, $value);
+                    $response = $response->withAddedHeader($header, $value);
                 }
 
                 return $response;
